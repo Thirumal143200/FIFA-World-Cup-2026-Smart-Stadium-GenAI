@@ -9,7 +9,7 @@ import { useUserStore } from '@/store/user-store';
 import { GlassCard } from '@/components/ui/GlassCard';
 import { ActionButton } from '@/components/ui/ActionButton';
 import { FifaBadge } from '@/components/ui/FifaBadge';
-import { SUPPORTED_LANGUAGES } from '@/lib/utils';
+import { SUPPORTED_LANGUAGES, cn } from '@/lib/utils';
 import { Send, Sparkles, MessageSquare, Volume2, Mic, Bot } from 'lucide-react';
 
 interface ChatMessage {

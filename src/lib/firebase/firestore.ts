@@ -36,7 +36,7 @@ export async function getDocument<T extends FirestoreData>(
   const docRef = doc(db, collectionName, docId);
   const snapshot = await getDoc(docRef);
   if (!snapshot.exists()) return null;
-  return { id: snapshot.id, ...snapshot.data() } as T;
+  return ({ id: snapshot.id, ...snapshot.data() } as unknown) as T;
 }
 
 /**
@@ -52,7 +52,7 @@ export async function queryDocuments<T extends FirestoreData>(
   const ref = collection(db, collectionName);
   const q = query(ref, ...constraints);
   const snapshot = await getDocs(q);
-  return snapshot.docs.map((d) => ({ id: d.id, ...d.data() }) as T);
+  return snapshot.docs.map((d) => ({ id: d.id, ...d.data() } as unknown) as T);
 }
 
 /**
@@ -101,7 +101,7 @@ export function subscribeToCollection<T extends FirestoreData>(
   const ref = collection(db, collectionName);
   const q = query(ref, ...constraints);
   return onSnapshot(q, (snapshot) => {
-    const docs = snapshot.docs.map((d) => ({ id: d.id, ...d.data() }) as T);
+    const docs = snapshot.docs.map((d) => ({ id: d.id, ...d.data() } as unknown) as T);
     callback(docs);
   });
 }
@@ -123,7 +123,7 @@ export function subscribeToDocument<T extends FirestoreData>(
       callback(null);
       return;
     }
-    callback({ id: snapshot.id, ...snapshot.data() } as T);
+    callback(({ id: snapshot.id, ...snapshot.data() } as unknown) as T);
   });
 }
 
