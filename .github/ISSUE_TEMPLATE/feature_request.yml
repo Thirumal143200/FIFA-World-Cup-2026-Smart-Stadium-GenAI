@@ -1,0 +1,22 @@
+name: Feature Request
+description: Propose a new feature or improvement for FIFA StadiumOS
+labels: [enhancement]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Suggest enhancements to improve navigation, crowd forecasting, or volunteer logistics.
+  - type: textarea
+    id: feature-desc
+    attributes:
+      label: Feature Description
+      placeholder: Describe the goal and why this is helpful for World Cup operations.
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternative Solutions
+      placeholder: Any alternative designs you have considered.
+    validations:
+      required: false
