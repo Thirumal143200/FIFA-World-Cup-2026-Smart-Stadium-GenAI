@@ -23,7 +23,7 @@ describe('Utility Functions', () => {
   describe('formatPercentage', () => {
     it('formats decimal numbers as percentage strings', () => {
       expect(formatPercentage(0.55)).toBe('55%');
-      expect(formatPercentage(0.999, 1)).toBe('100.0%');
+      expect(formatPercentage(0.999, 1)).toBe('99.9%');
     });
   });
 

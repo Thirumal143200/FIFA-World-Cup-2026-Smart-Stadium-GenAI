@@ -11,6 +11,13 @@ jest.mock('@/lib/firebase/config', () => ({
   isFirebaseConfigured: jest.fn(() => false),
 }));
 
+// Mock sanitization to prevent isomorphic-dompurify syntax errors in Node test environment
+jest.mock('@/lib/security/sanitize', () => ({
+  sanitizeInput: jest.fn((str) => str),
+  sanitizeHtml: jest.fn((str) => str),
+  sanitizeQuery: jest.fn((str) => str),
+}));
+
 describe('API Route Handlers Integration', () => {
   describe('GET /api/stadiums', () => {
     it('returns all 16 stadiums with status 200', async () => {
