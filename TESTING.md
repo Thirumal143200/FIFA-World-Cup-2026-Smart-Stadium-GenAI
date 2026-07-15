@@ -16,14 +16,15 @@ Verify visual and standard code formatting rules are met:
 npm run lint
 ```
 
-### 3. API & AI Test Simulation
-You can perform quick checks against local endpoints using `curl` or Postman.
-For example, to simulate an AI chat response:
+### 3. Automated Test Suite
+Run Jest unit and integration test suites:
 ```bash
-curl -X POST http://localhost:3000/api/ai/chat \
-  -H "Content-Type: application/json" \
-  -d '{"message":"hello", "language":"en", "stadiumId":"metlife", "module":"chat"}'
+npm test
 ```
+This runs:
+- **Unit tests**: verification of stadium search telemetry, helper utilities, and layout properties.
+- **Integration tests**: validation of Next.js serverless API routes under mock data fallbacks.
+- **Component tests**: verifying `ActionButton` UI accessibility, loading states, and disabled behaviors.
 
 ---
 

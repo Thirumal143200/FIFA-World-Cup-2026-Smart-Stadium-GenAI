@@ -168,7 +168,7 @@ export default function LandingPage() {
             Select Your Role
           </h2>
           <p className="mt-1 text-muted-foreground">
-            Choose how you're experiencing the World Cup today
+            Choose how you&apos;re experiencing the World Cup today
           </p>
         </motion.div>
 

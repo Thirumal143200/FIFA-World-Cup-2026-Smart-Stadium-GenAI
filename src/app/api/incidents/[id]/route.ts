@@ -57,7 +57,7 @@ export async function PATCH(
     const updateTime = new Date().toISOString();
 
     // Prepare update data
-    const updatePayload: Record<string, any> = {
+    const updatePayload: Record<string, unknown> = {
       updatedAt: updateTime,
     };
 

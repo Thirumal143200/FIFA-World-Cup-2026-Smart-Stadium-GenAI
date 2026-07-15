@@ -7,9 +7,8 @@ import { useUserStore } from '@/store/user-store';
 import { useStadiumStore } from '@/store/stadium-store';
 import { stadiums } from '@/data/stadiums';
 import { GlassCard } from '@/components/ui/GlassCard';
-import { FifaBadge } from '@/components/ui/FifaBadge';
 import { ActionButton } from '@/components/ui/ActionButton';
-import { Accessibility, Eye, HelpCircle, Star } from 'lucide-react';
+import { Accessibility, Eye, Star } from 'lucide-react';
 import { useState } from 'react';
 
 export default function FanAccessibility() {
@@ -25,7 +24,7 @@ export default function FanAccessibility() {
   };
 
   const handleCheckboxChange = (category: 'mobility' | 'visual' | 'auditory' | 'cognitive', field: string, value: boolean) => {
-    const subProfile = { ...(accessibility as any)[category], [field]: value };
+    const subProfile = { ...(accessibility[category] as unknown as Record<string, unknown>), [field]: value };
     updateAccessibility({ [category]: subProfile });
   };
 
@@ -34,8 +33,8 @@ export default function FanAccessibility() {
     setAiTip(null);
     try {
       const activeNeeds = [
-        ...Object.entries(accessibility.mobility).filter(([_, v]) => v === true).map(([k]) => k),
-        ...Object.entries(accessibility.visual).filter(([_, v]) => v === true).map(([k]) => k),
+        ...Object.entries(accessibility.mobility).filter(([, v]) => v === true).map(([k]) => k),
+        ...Object.entries(accessibility.visual).filter(([, v]) => v === true).map(([k]) => k),
       ];
 
       const res = await fetch('/api/ai/accessibility', {

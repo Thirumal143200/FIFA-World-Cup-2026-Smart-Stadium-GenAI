@@ -14,7 +14,6 @@ import {
   MapPin,
   Calendar,
   CloudSun,
-  Bus,
   Accessibility,
   Leaf,
   MessageSquare,
@@ -46,7 +45,7 @@ export default function FanHub() {
               Welcome, {displayName}!
             </h1>
             <p className="text-white/80 text-sm sm:text-base">
-              You are currently viewing {stadium.name} in {stadium.city}. Let's make your match day experience smooth and enjoyable.
+              You are currently viewing {stadium.name} in {stadium.city}. Let&apos;s make your match day experience smooth and enjoyable.
             </p>
           </div>
         </div>

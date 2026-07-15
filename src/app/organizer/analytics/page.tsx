@@ -7,7 +7,7 @@ import { useStadiumStore } from '@/store/stadium-store';
 import { stadiums } from '@/data/stadiums';
 import { GlassCard } from '@/components/ui/GlassCard';
 import { FifaBadge } from '@/components/ui/FifaBadge';
-import { BarChart3, Clock, HelpCircle, ShieldAlert } from 'lucide-react';
+import { BarChart3, Clock, ShieldAlert } from 'lucide-react';
 
 export default function OrganizerAnalytics() {
   const { selectedStadiumId } = useStadiumStore();

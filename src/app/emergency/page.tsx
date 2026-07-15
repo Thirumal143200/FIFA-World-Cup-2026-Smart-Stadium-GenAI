@@ -5,16 +5,13 @@
 import { useState } from 'react';
 import { GlassCard } from '@/components/ui/GlassCard';
 import { FifaBadge } from '@/components/ui/FifaBadge';
-import { ActionButton } from '@/components/ui/ActionButton';
 import { useStadiumStore } from '@/store/stadium-store';
-import { stadiums } from '@/data/stadiums';
-import { AlertOctagon, ShieldAlert, Phone, HelpCircle, ArrowLeft, Heart, Flame, Shield } from 'lucide-react';
+import { AlertOctagon, ShieldAlert, Phone, ArrowLeft, Heart, Flame, Shield } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
 export default function EmergencyHub() {
   const router = useRouter();
   const { selectedStadiumId } = useStadiumStore();
-  const stadium = stadiums.find((s) => s.id === selectedStadiumId) || stadiums[0];
 
   const [loading, setLoading] = useState(false);
   const [protocol, setProtocol] = useState<string | null>(null);
@@ -43,8 +40,9 @@ export default function EmergencyHub() {
       } else {
         throw new Error(data.error || 'Failed to get protocol');
       }
-    } catch (err: any) {
-      setProtocol(`❌ SOS Error: ${err.message}. Please report directly to nearest security officer.`);
+    } catch (err) {
+      const errMsg = err instanceof Error ? err.message : String(err);
+      setProtocol(`❌ SOS Error: ${errMsg}. Please report directly to nearest security officer.`);
     } finally {
       setLoading(false);
     }

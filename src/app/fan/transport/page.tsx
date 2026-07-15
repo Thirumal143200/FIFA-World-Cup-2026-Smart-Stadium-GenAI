@@ -8,8 +8,7 @@ import { useStadiumStore } from '@/store/stadium-store';
 import { stadiums } from '@/data/stadiums';
 import { GlassCard } from '@/components/ui/GlassCard';
 import { FifaBadge } from '@/components/ui/FifaBadge';
-import { ActionButton } from '@/components/ui/ActionButton';
-import { Bus, Clock, DollarSign, ShieldAlert, Sparkles, Leaf } from 'lucide-react';
+import { Bus, Clock, DollarSign, ShieldAlert, Leaf } from 'lucide-react';
 
 interface TransportStatus {
   mode: string;

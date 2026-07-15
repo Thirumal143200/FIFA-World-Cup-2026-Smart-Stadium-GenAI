@@ -9,7 +9,7 @@ import { stadiums } from '@/data/stadiums';
 import { GlassCard } from '@/components/ui/GlassCard';
 import { FifaBadge } from '@/components/ui/FifaBadge';
 import { ActionButton } from '@/components/ui/ActionButton';
-import { AlertOctagon, Users2, Shield, Calendar, ArrowRight, LifeBuoy } from 'lucide-react';
+import { AlertOctagon, Users2, Shield, Calendar, LifeBuoy } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import type { Incident } from '@/types';
 

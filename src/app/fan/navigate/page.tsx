@@ -10,7 +10,13 @@ import { stadiums } from '@/data/stadiums';
 import { GlassCard } from '@/components/ui/GlassCard';
 import { FifaBadge } from '@/components/ui/FifaBadge';
 import { ActionButton } from '@/components/ui/ActionButton';
-import { MapPin, Navigation, ArrowRight, Accessibility, AlertTriangle } from 'lucide-react';
+import { Navigation, ArrowRight, Accessibility } from 'lucide-react';
+import dynamic from 'next/dynamic';
+
+const LeafletMap = dynamic(() => import('@/components/ui/LeafletMap'), {
+  ssr: false,
+  loading: () => <div className="h-full w-full flex items-center justify-center bg-muted text-xs text-muted-foreground min-h-[300px]">Loading interactive map...</div>
+});
 
 export default function FanNavigate() {
   const { selectedStadiumId } = useStadiumStore();
@@ -39,7 +45,7 @@ export default function FanNavigate() {
           stadiumId: selectedStadiumId,
           accessibilityNeeds: accessibility.enabled
             ? Object.entries(accessibility.mobility)
-                .filter(([_, v]) => v === true)
+                .filter(([, v]) => v === true)
                 .map(([k]) => k)
             : [],
           avoidCrowded: true,
@@ -52,8 +58,9 @@ export default function FanNavigate() {
       } else {
         throw new Error(data.error || 'Failed to get route');
       }
-    } catch (err: any) {
-      setRouteExplanation(`❌ Navigation Error: ${err.message}. Please verify locations inside the stadium.`);
+    } catch (err) {
+      const errMsg = err instanceof Error ? err.message : String(err);
+      setRouteExplanation(`❌ Navigation Error: ${errMsg}. Please verify locations inside the stadium.`);
     } finally {
       setLoading(false);
     }
@@ -157,24 +164,17 @@ export default function FanNavigate() {
 
           {/* Results + Map visualization */}
           <div className="lg:col-span-2 space-y-6">
-            {/* Map Simulator */}
+            {/* Interactive Stadium Map */}
             <GlassCard variant="default" className="p-0 overflow-hidden relative aspect-[16/9] w-full flex flex-col justify-between border border-border">
-              <div className="absolute inset-0 bg-muted flex items-center justify-center pointer-events-none">
-                <div className="text-center space-y-2">
-                  <MapPin className="h-10 w-10 text-primary mx-auto animate-bounce" />
-                  <span className="text-xs text-muted-foreground font-semibold block uppercase tracking-wider">
-                    Interactive Stadium Map Simulator
-                  </span>
-                  <span className="text-[10px] text-muted-foreground/80 block">
-                    Map centers on coordinates: {stadium.coordinates.lat}, {stadium.coordinates.lng}
-                  </span>
-                </div>
-              </div>
-
+              <LeafletMap
+                lat={stadium.coordinates.lat}
+                lng={stadium.coordinates.lng}
+                navigationPath={from && to ? { fromName: from, toName: to } : undefined}
+              />
               {/* Status overlay */}
-              <div className="relative p-4 flex justify-between items-start pointer-events-none">
+              <div className="absolute top-4 left-4 z-10 pointer-events-none">
                 <FifaBadge variant="success" pulse>
-                  Live GPS Connected
+                  Live OpenStreetMap Active
                 </FifaBadge>
               </div>
             </GlassCard>

@@ -7,9 +7,8 @@ import { DashboardLayout } from '@/components/layout/dashboard-layout';
 import { useStadiumStore } from '@/store/stadium-store';
 import { stadiums } from '@/data/stadiums';
 import { GlassCard } from '@/components/ui/GlassCard';
-import { FifaBadge } from '@/components/ui/FifaBadge';
 import { ActionButton } from '@/components/ui/ActionButton';
-import { Leaf, Award, Globe, Scale, Sparkles } from 'lucide-react';
+import { Leaf, Award, Scale, Sparkles } from 'lucide-react';
 import type { SustainabilityMetrics } from '@/types';
 
 export default function OrganizerSustainability() {

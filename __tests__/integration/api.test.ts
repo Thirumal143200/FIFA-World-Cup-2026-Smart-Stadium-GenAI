@@ -72,7 +72,7 @@ describe('API Route Handlers Integration', () => {
       });
 
       const response = await createIncident(request);
-      expect(response.status).toBe(201 || 200);
+      expect(response.status).toBe(201);
 
       const data = await response.json();
       expect(data).toHaveProperty('id');

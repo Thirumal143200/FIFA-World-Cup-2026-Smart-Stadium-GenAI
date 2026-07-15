@@ -2,7 +2,7 @@
 // Incident Log Management — allows reporting, claiming, and notes logging
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { DashboardLayout } from '@/components/layout/dashboard-layout';
 import { useStadiumStore } from '@/store/stadium-store';
 import { useUserStore } from '@/store/user-store';
@@ -10,7 +10,7 @@ import { stadiums } from '@/data/stadiums';
 import { GlassCard } from '@/components/ui/GlassCard';
 import { FifaBadge } from '@/components/ui/FifaBadge';
 import { ActionButton } from '@/components/ui/ActionButton';
-import { AlertTriangle, Plus, ShieldCheck, User } from 'lucide-react';
+import { AlertTriangle, Plus, ShieldCheck } from 'lucide-react';
 import type { Incident } from '@/types';
 
 export default function StaffIncidents() {
@@ -20,6 +20,12 @@ export default function StaffIncidents() {
 
   const [incidents, setIncidents] = useState<Incident[]>([]);
   const [loading, setLoading] = useState(true);
+  const [prevStadiumId, setPrevStadiumId] = useState(selectedStadiumId);
+
+  if (selectedStadiumId !== prevStadiumId) {
+    setPrevStadiumId(selectedStadiumId);
+    setLoading(true);
+  }
 
   // Report form state
   const [showForm, setShowForm] = useState(false);
@@ -36,9 +42,8 @@ export default function StaffIncidents() {
   const [notes, setNotes] = useState('');
   const [updating, setUpdating] = useState(false);
 
-  async function fetchIncidents() {
+  const fetchIncidents = useCallback(async () => {
     try {
-      setLoading(true);
       const res = await fetch(`/api/incidents?stadiumId=${selectedStadiumId}`);
       const data = await res.json();
       if (res.ok) {
@@ -49,11 +54,12 @@ export default function StaffIncidents() {
     } finally {
       setLoading(false);
     }
-  }
+  }, [selectedStadiumId]);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     fetchIncidents();
-  }, [selectedStadiumId]);
+  }, [fetchIncidents]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -180,7 +186,7 @@ export default function StaffIncidents() {
                 <label className="block text-xs font-semibold text-muted-foreground mb-1">CATEGORY</label>
                 <select
                   value={category}
-                  onChange={(e) => setCategory(e.target.value as any)}
+                  onChange={(e) => setCategory(e.target.value as 'medical' | 'security' | 'fire' | 'weather' | 'structural' | 'other')}
                   className="w-full h-10 px-3 rounded-lg border border-border bg-background text-sm focus:outline-none focus:ring-2 focus:ring-ring"
                 >
                   <option value="medical">Medical / First Aid</option>
@@ -196,7 +202,7 @@ export default function StaffIncidents() {
                 <label className="block text-xs font-semibold text-muted-foreground mb-1">SEVERITY LEVEL</label>
                 <select
                   value={severity}
-                  onChange={(e) => setSeverity(e.target.value as any)}
+                  onChange={(e) => setSeverity(e.target.value as 'low' | 'medium' | 'high' | 'critical')}
                   className="w-full h-10 px-3 rounded-lg border border-border bg-background text-sm focus:outline-none focus:ring-2 focus:ring-ring"
                 >
                   <option value="low">Low (Spills, light fixes)</option>
@@ -292,6 +298,7 @@ export default function StaffIncidents() {
                         <ActionButton
                           variant="outline"
                           size="sm"
+                          loading={updating}
                           onClick={() => handleUpdateStatus(inc.id, 'acknowledged', 'Incident claimed by responder.')}
                         >
                           Acknowledge
@@ -301,6 +308,7 @@ export default function StaffIncidents() {
                         <ActionButton
                           variant="accent"
                           size="sm"
+                          loading={updating}
                           onClick={() => handleUpdateStatus(inc.id, 'in-progress', 'Dispatched response units.')}
                         >
                           Dispatch Units
@@ -318,6 +326,7 @@ export default function StaffIncidents() {
                           <ActionButton
                             variant="primary"
                             size="sm"
+                            loading={updating}
                             disabled={!notes.trim()}
                             onClick={() => handleUpdateStatus(inc.id, 'resolved', notes)}
                           >

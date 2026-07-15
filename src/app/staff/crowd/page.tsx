@@ -9,7 +9,13 @@ import { stadiums } from '@/data/stadiums';
 import { GlassCard } from '@/components/ui/GlassCard';
 import { FifaBadge } from '@/components/ui/FifaBadge';
 import { ActionButton } from '@/components/ui/ActionButton';
-import { Sparkles, MapPin, Users2, ShieldAlert } from 'lucide-react';
+import { Sparkles, ShieldAlert } from 'lucide-react';
+import dynamic from 'next/dynamic';
+
+const LeafletMap = dynamic(() => import('@/components/ui/LeafletMap'), {
+  ssr: false,
+  loading: () => <div className="h-full w-full flex items-center justify-center bg-muted text-xs text-muted-foreground min-h-[300px]">Loading interactive map...</div>
+});
 
 export default function StaffCrowd() {
   const { selectedStadiumId } = useStadiumStore();
@@ -21,7 +27,9 @@ export default function StaffCrowd() {
   // Generate simulated density per zone
   const zonesWithOccupancy = stadium.zones.map((zone) => {
     const seed = zone.id.includes('gate') ? 0.75 : 0.45;
-    const density = Math.min(0.98, Number((seed + Math.random() * 0.2).toFixed(2)));
+    const idHash = zone.id.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
+    const pseudoRandom = (idHash % 100) / 100;
+    const density = Math.min(0.98, Number((seed + pseudoRandom * 0.2).toFixed(2)));
     const current = Math.round(zone.capacity * density);
     const status = density > 0.85 ? 'at-capacity' : density > 0.65 ? 'crowded' : 'open';
 
@@ -77,28 +85,29 @@ export default function StaffCrowd() {
         <div className="grid gap-6 lg:grid-cols-3">
           {/* Map simulator */}
           <div className="lg:col-span-2 space-y-6">
+            {/* Interactive Stadium Map with Crowd Heatmap */}
             <GlassCard variant="default" className="p-0 overflow-hidden relative aspect-[16/9] w-full flex flex-col justify-between border border-border">
-              <div className="absolute inset-0 bg-muted flex flex-col items-center justify-center pointer-events-none p-4">
-                <Users2 className="h-10 w-10 text-primary animate-pulse mb-2" />
-                <span className="text-xs text-muted-foreground font-semibold block uppercase tracking-wider">
-                  Stadium Heatmap Simulation Overlay
-                </span>
-                <div className="flex gap-4 mt-3">
-                  <div className="flex items-center gap-1.5 text-[10px] text-muted-foreground">
-                    <span className="h-2 w-2 rounded-full bg-emerald-500" /> &lt;50%
-                  </div>
-                  <div className="flex items-center gap-1.5 text-[10px] text-muted-foreground">
-                    <span className="h-2 w-2 rounded-full bg-amber-500" /> 50-80%
-                  </div>
-                  <div className="flex items-center gap-1.5 text-[10px] text-muted-foreground">
-                    <span className="h-2 w-2 rounded-full bg-red-500" /> &gt;80%
-                  </div>
-                </div>
-              </div>
-
-              <div className="relative p-4 flex justify-between items-start pointer-events-none">
+              <LeafletMap
+                lat={stadium.coordinates.lat}
+                lng={stadium.coordinates.lng}
+                heatmapZones={stadium.zones.map((zone, idx) => {
+                  const angle = (idx / stadium.zones.length) * 2 * Math.PI;
+                  const latOffset = Math.sin(angle) * 0.0015;
+                  const lngOffset = Math.cos(angle) * 0.0015;
+                  const densitySeed = (zone.name.length * (zone.level + 1)) % 10;
+                  const density = densitySeed / 10;
+                  return {
+                    name: zone.name,
+                    latOffset,
+                    lngOffset,
+                    density,
+                  };
+                })}
+              />
+              {/* Status overlay */}
+              <div className="absolute top-4 left-4 z-10 pointer-events-none">
                 <FifaBadge variant="success" pulse>
-                  Telemetry Online
+                  Live Heatmap Connected
                 </FifaBadge>
               </div>
             </GlassCard>

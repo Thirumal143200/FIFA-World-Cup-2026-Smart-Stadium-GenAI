@@ -3,7 +3,7 @@
 
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import type { Stadium, StadiumZone, CrowdDensity } from '@/types';
+import type { Stadium, CrowdDensity } from '@/types';
 
 interface StadiumState {
   selectedStadiumId: string;

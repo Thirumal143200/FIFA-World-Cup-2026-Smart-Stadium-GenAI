@@ -7,9 +7,8 @@ import { DashboardLayout } from '@/components/layout/dashboard-layout';
 import { useStadiumStore } from '@/store/stadium-store';
 import { stadiums } from '@/data/stadiums';
 import { GlassCard } from '@/components/ui/GlassCard';
-import { FifaBadge } from '@/components/ui/FifaBadge';
 import { ActionButton } from '@/components/ui/ActionButton';
-import { BrainCircuit, Sparkles, Scale, AlertTriangle, ShieldCheck } from 'lucide-react';
+import { BrainCircuit, Sparkles } from 'lucide-react';
 
 export default function OrganizerDecisions() {
   const { selectedStadiumId } = useStadiumStore();
@@ -44,8 +43,9 @@ export default function OrganizerDecisions() {
       } else {
         throw new Error(data.error || 'Failed to get insights');
       }
-    } catch (err: any) {
-      setInsights(`❌ Strategic Error: ${err.message}. Failed to run optimization models.`);
+    } catch (err) {
+      const errMsg = err instanceof Error ? err.message : String(err);
+      setInsights(`❌ Strategic Error: ${errMsg}. Failed to run optimization models.`);
     } finally {
       setLoading(false);
     }

@@ -5,18 +5,16 @@
 import { useEffect, useState } from 'react';
 import { DashboardLayout } from '@/components/layout/dashboard-layout';
 import { useStadiumStore } from '@/store/stadium-store';
-import { stadiums } from '@/data/stadiums';
 import { GlassCard } from '@/components/ui/GlassCard';
 import { FifaBadge } from '@/components/ui/FifaBadge';
 import { ActionButton } from '@/components/ui/ActionButton';
-import { Shield, AlertTriangle, Users, MessageSquare, Sparkles } from 'lucide-react';
+import { Shield, AlertTriangle, Users, Sparkles } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import type { Incident } from '@/types';
 
 export default function SecurityHub() {
   const router = useRouter();
   const { selectedStadiumId } = useStadiumStore();
-  const stadium = stadiums.find((s) => s.id === selectedStadiumId) || stadiums[0];
 
   const [incidents, setIncidents] = useState<Incident[]>([]);
   const [loading, setLoading] = useState(true);

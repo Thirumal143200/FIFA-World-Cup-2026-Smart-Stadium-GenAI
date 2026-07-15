@@ -8,9 +8,8 @@ import { useStadiumStore } from '@/store/stadium-store';
 import { useUserStore } from '@/store/user-store';
 import { GlassCard } from '@/components/ui/GlassCard';
 import { ActionButton } from '@/components/ui/ActionButton';
-import { FifaBadge } from '@/components/ui/FifaBadge';
 import { SUPPORTED_LANGUAGES, cn } from '@/lib/utils';
-import { Send, Sparkles, MessageSquare, Volume2, Mic, Bot } from 'lucide-react';
+import { Send, Bot } from 'lucide-react';
 
 interface ChatMessage {
   id: string;
@@ -78,13 +77,14 @@ export default function FanChat() {
       } else {
         throw new Error(data.error || 'Failed to get response');
       }
-    } catch (err: any) {
+    } catch (err) {
+      const errMsg = err instanceof Error ? err.message : String(err);
       setMessages((prev) => [
         ...prev,
         {
           id: `msg-${Date.now()}-err`,
           role: 'assistant',
-          content: `Sorry, I encountered an error: ${err.message}. Please try again.`,
+          content: `Sorry, I encountered an error: ${errMsg}. Please try again.`,
           timestamp: new Date(),
         },
       ]);

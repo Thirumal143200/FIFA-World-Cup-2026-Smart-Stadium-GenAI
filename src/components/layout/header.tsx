@@ -5,37 +5,29 @@
 import { useUserStore } from '@/store/user-store';
 import { useStadiumStore } from '@/store/stadium-store';
 import { useUIStore } from '@/store/ui-store';
-import { cn } from '@/lib/utils';
 import { stadiums } from '@/data/stadiums';
 import { useTheme } from 'next-themes';
 import {
-  Bell,
-  Globe,
-  Settings,
-  Sparkles,
   Menu,
   Moon,
   Sun,
-  Accessibility,
   Eye,
   AlertTriangle,
 } from 'lucide-react';
 import { FifaBadge } from '../ui/FifaBadge';
 import { ActionButton } from '../ui/ActionButton';
 import { useRouter } from 'next/navigation';
+import type { UserRole } from '@/types';
 
 export function Header() {
   const router = useRouter();
-  const { role, displayName, setRole } = useUserStore();
+  const { role, setRole } = useUserStore();
   const { selectedStadiumId, setSelectedStadium } = useStadiumStore();
-  const { toggleSidebar, notifications } = useUIStore();
+  const { toggleSidebar } = useUIStore();
   const { theme, setTheme } = useTheme();
 
-  const activeStadium = stadiums.find((s) => s.id === selectedStadiumId) || stadiums[0];
-  const unreadNotifs = notifications.filter((n) => !n.read).length;
-
   const handleRoleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const nextRole = e.target.value as any;
+    const nextRole = e.target.value as UserRole;
     setRole(nextRole);
     router.push(`/${nextRole}`);
   };
