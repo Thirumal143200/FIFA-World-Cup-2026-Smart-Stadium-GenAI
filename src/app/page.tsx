@@ -185,7 +185,7 @@ export default function LandingPage() {
           variants={container}
           initial="hidden"
           animate="show"
-          className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4"
+          className="grid gap-6 sm:grid-cols-2 lg:grid-cols-5"
         >
           {roleCards.map((card) => (
             <motion.div key={card.role} variants={item}>
