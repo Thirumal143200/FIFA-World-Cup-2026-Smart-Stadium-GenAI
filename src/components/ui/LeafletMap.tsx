@@ -114,7 +114,7 @@ export default function LeafletMap({
             let emoji = 'ℹ️';
             let color = '#00A5E0'; // FIFA sky blue
 
-            if (fac.type === 'first-aid' || fac.type === 'medical') {
+            if (fac.type === 'first-aid') {
               emoji = '🏥';
               color = '#E4002B'; // FIFA red
             } else if (fac.type === 'food') {

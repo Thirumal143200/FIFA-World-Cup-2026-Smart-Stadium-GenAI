@@ -21,6 +21,7 @@ export interface AuthenticatedUser {
   displayName: string;
   role: UserRole;
   emailVerified: boolean;
+  language?: string;
   photoURL?: string;
   createdAt: string;
 }
@@ -89,6 +90,7 @@ export async function registerUser(
       displayName,
       role,
       emailVerified: firebaseUser.emailVerified,
+      language: 'en',
       createdAt: new Date().toISOString(),
     };
 
@@ -107,6 +109,7 @@ export async function registerUser(
       displayName,
       role,
       emailVerified: false,
+      language: 'en',
       createdAt: new Date().toISOString(),
     };
 

@@ -3,7 +3,7 @@
 
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { DashboardLayout } from '@/components/layout/dashboard-layout';
 import { useStadiumStore } from '@/store/stadium-store';
 import { useUserStore } from '@/store/user-store';
@@ -12,7 +12,7 @@ import { GlassCard } from '@/components/ui/GlassCard';
 import { FifaBadge } from '@/components/ui/FifaBadge';
 import { ActionButton } from '@/components/ui/ActionButton';
 import { useRouter } from 'next/navigation';
-import { ClipboardList, Users2, Sparkles, BookOpen, Clock, MapPin, CheckCircle } from 'lucide-react';
+import { ClipboardList, Sparkles, BookOpen, Clock, MapPin, CheckCircle } from 'lucide-react';
 
 export default function VolunteerHub() {
   const router = useRouter();

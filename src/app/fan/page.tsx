@@ -19,6 +19,7 @@ import {
   MessageSquare,
   AlertTriangle,
   Flame,
+  Sparkles,
 } from 'lucide-react';
 
 export default function FanHub() {

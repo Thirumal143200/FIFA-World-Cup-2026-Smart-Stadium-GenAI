@@ -1,7 +1,7 @@
 // __tests__/unit/utils.test.ts
 // Unit tests for helper utilities
 
-import { cn, formatPercentage, getDensityColor, getDensityLabel } from '@/lib/utils';
+import { cn, formatPercentage, getDensityColor, getDensityLabel, getLanguageDirection } from '@/lib/utils';
 
 describe('Utility Functions', () => {
   describe('cn (Class Merger)', () => {
@@ -41,14 +41,12 @@ describe('Utility Functions', () => {
 
   describe('getLanguageDirection', () => {
     it('returns rtl for Arabic, Hebrew, Urdu', () => {
-      const { getLanguageDirection } = require('@/lib/utils');
       expect(getLanguageDirection('ar')).toBe('rtl');
       expect(getLanguageDirection('he')).toBe('rtl');
       expect(getLanguageDirection('ur')).toBe('rtl');
     });
 
     it('returns ltr for English, Spanish, Vietnamese', () => {
-      const { getLanguageDirection } = require('@/lib/utils');
       expect(getLanguageDirection('en')).toBe('ltr');
       expect(getLanguageDirection('es')).toBe('ltr');
       expect(getLanguageDirection('vi')).toBe('ltr');
