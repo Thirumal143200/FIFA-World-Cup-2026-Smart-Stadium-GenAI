@@ -22,6 +22,8 @@ export default function FanTransport() {
 
   const [statuses, setStatuses] = useState<TransportStatus[]>([]);
   const [loading, setLoading] = useState(true);
+  const [aiAdvice, setAiAdvice] = useState<string | null>(null);
+  const [loadingAdvice, setLoadingAdvice] = useState(false);
 
   useEffect(() => {
     async function fetchTransitStatus() {
@@ -38,8 +40,36 @@ export default function FanTransport() {
         setLoading(false);
       }
     }
+
+    async function fetchAIAdvice() {
+      try {
+        setLoadingAdvice(true);
+        setAiAdvice(null);
+        const res = await fetch('/api/ai/chat', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            message: `Recommend the best transit option, departure times, estimated arrival, alternative routing, and carbon impact comparisons to reach ${stadium.name} from the local city hub.`,
+            language: 'en',
+            stadiumId: selectedStadiumId,
+            module: 'transport',
+          }),
+        });
+        const data = await res.json();
+        if (res.ok) {
+          setAiAdvice(data.message);
+        }
+      } catch (err) {
+        console.error(err);
+        setAiAdvice('Unable to generate AI transit recommendations. Please try again.');
+      } finally {
+        setLoadingAdvice(false);
+      }
+    }
+
     fetchTransitStatus();
-  }, [selectedStadiumId]);
+    fetchAIAdvice();
+  }, [selectedStadiumId, stadium.name]);
 
   return (
     <DashboardLayout>
@@ -132,12 +162,17 @@ export default function FanTransport() {
                 <Leaf className="h-5 w-5 text-emerald-500" />
                 <h3 className="font-bold text-sm text-emerald-600 dark:text-emerald-400">AI Green Travel Advisor</h3>
               </div>
-              <p className="text-xs text-muted-foreground leading-relaxed">
-                Attendees traveling via the <strong>Meadowlands Rail Line</strong> or <strong>FIFA Fan Shuttles</strong> contribute 85% less CO₂ emissions compared to private driving.
-              </p>
-              <div className="p-3 bg-emerald-500/10 rounded-lg border border-emerald-500/20 text-[11px] text-emerald-700 dark:text-emerald-300">
-                🌱 Match Ticket holders travel free on all NJ Transit bus routes and light rail lines on Match Day.
-              </div>
+              {loadingAdvice ? (
+                <div className="space-y-2 animate-pulse py-2">
+                  <div className="h-3 bg-muted rounded w-5/6" />
+                  <div className="h-3 bg-muted rounded w-full" />
+                  <div className="h-3 bg-muted rounded w-2/3" />
+                </div>
+              ) : (
+                <div className="text-xs text-slate-300 leading-relaxed whitespace-pre-wrap">
+                  {aiAdvice}
+                </div>
+              )}
             </GlassCard>
           </div>
         </div>

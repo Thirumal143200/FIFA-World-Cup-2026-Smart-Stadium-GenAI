@@ -35,6 +35,8 @@ export default function FanAccessibility() {
       const activeNeeds = [
         ...Object.entries(accessibility.mobility).filter(([, v]) => v === true).map(([k]) => k),
         ...Object.entries(accessibility.visual).filter(([, v]) => v === true).map(([k]) => k),
+        ...Object.entries(accessibility.auditory).filter(([, v]) => v === true).map(([k]) => k),
+        ...Object.entries(accessibility.cognitive).filter(([, v]) => v === true).map(([k]) => k),
       ];
 
       const res = await fetch('/api/ai/accessibility', {
@@ -88,7 +90,7 @@ export default function FanAccessibility() {
                 <div className="space-y-4 pt-2 border-t border-border">
                   {/* Mobility needs */}
                   <div className="space-y-2">
-                    <h3 className="text-xs font-bold text-muted-foreground uppercase">Mobility Assistance</h3>
+                    <h3 className="text-xs font-bold text-muted-foreground uppercase">Mobility & Seniors</h3>
                     <label className="flex items-center gap-2.5 text-sm cursor-pointer">
                       <input
                         type="checkbox"
@@ -101,34 +103,57 @@ export default function FanAccessibility() {
                     <label className="flex items-center gap-2.5 text-sm cursor-pointer">
                       <input
                         type="checkbox"
-                        checked={accessibility.mobility.requiresElevator}
-                        onChange={(e) => handleCheckboxChange('mobility', 'requiresElevator', e.target.checked)}
+                        checked={accessibility.mobility.limitedMobility}
+                        onChange={(e) => handleCheckboxChange('mobility', 'limitedMobility', e.target.checked)}
                         className="rounded border-border h-4 w-4"
                       />
-                      <span>Requires Elevator</span>
+                      <span>Senior / Limited Mobility</span>
                     </label>
                   </div>
 
                   {/* Visual needs */}
                   <div className="space-y-2 pt-2 border-t border-border/40">
-                    <h3 className="text-xs font-bold text-muted-foreground uppercase">Visual Support</h3>
+                    <h3 className="text-xs font-bold text-muted-foreground uppercase">Blind & Low Vision</h3>
                     <label className="flex items-center gap-2.5 text-sm cursor-pointer">
                       <input
                         type="checkbox"
-                        checked={accessibility.visual.highContrastRequired}
-                        onChange={(e) => handleCheckboxChange('visual', 'highContrastRequired', e.target.checked)}
+                        checked={accessibility.visual.blind}
+                        onChange={(e) => handleCheckboxChange('visual', 'blind', e.target.checked)}
                         className="rounded border-border h-4 w-4"
                       />
-                      <span>High Contrast Mode</span>
+                      <span>Blind / Screen Reader User</span>
                     </label>
                     <label className="flex items-center gap-2.5 text-sm cursor-pointer">
                       <input
                         type="checkbox"
-                        checked={accessibility.visual.screenReaderUser}
-                        onChange={(e) => handleCheckboxChange('visual', 'screenReaderUser', e.target.checked)}
+                        checked={accessibility.visual.lowVision}
+                        onChange={(e) => handleCheckboxChange('visual', 'lowVision', e.target.checked)}
                         className="rounded border-border h-4 w-4"
                       />
-                      <span>Screen Reader Optimized</span>
+                      <span>Low Vision / High Contrast</span>
+                    </label>
+                  </div>
+
+                  {/* Auditory / Families */}
+                  <div className="space-y-2 pt-2 border-t border-border/40">
+                    <h3 className="text-xs font-bold text-muted-foreground uppercase">Hearing & Families</h3>
+                    <label className="flex items-center gap-2.5 text-sm cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={accessibility.auditory.deaf || accessibility.auditory.hardOfHearing}
+                        onChange={(e) => handleCheckboxChange('auditory', 'deaf', e.target.checked)}
+                        className="rounded border-border h-4 w-4"
+                      />
+                      <span>Hearing Impairment</span>
+                    </label>
+                    <label className="flex items-center gap-2.5 text-sm cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={accessibility.cognitive.simplifiedInterface}
+                        onChange={(e) => handleCheckboxChange('cognitive', 'simplifiedInterface', e.target.checked)}
+                        className="rounded border-border h-4 w-4"
+                      />
+                      <span>Family / Stroller Friendly</span>
                     </label>
                   </div>
 

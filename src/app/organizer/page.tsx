@@ -2,6 +2,7 @@
 // Event Organizer Hub — Executive command center overview
 'use client';
 
+import { useState, useEffect } from 'react';
 import { DashboardLayout } from '@/components/layout/dashboard-layout';
 import { useStadiumStore } from '@/store/stadium-store';
 import { stadiums } from '@/data/stadiums';
@@ -15,6 +16,40 @@ export default function OrganizerHub() {
   const router = useRouter();
   const { selectedStadiumId } = useStadiumStore();
   const stadium = stadiums.find((s) => s.id === selectedStadiumId) || stadiums[0];
+
+  const [aiSummary, setAiSummary] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    async function fetchInsights() {
+      setLoading(true);
+      setAiSummary(null);
+      try {
+        const response = await fetch('/api/ai/operational', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            stadiumId: selectedStadiumId,
+            currentStaffCount: 420,
+            activeIncidentsCount: 3,
+            matchStage: 'mid-match',
+          }),
+        });
+        const data = await response.json();
+        if (response.ok) {
+          setAiSummary(data.insights);
+        } else {
+          throw new Error(data.error || 'Failed to fetch insights');
+        }
+      } catch (err) {
+        console.error('Insights fetch error:', err);
+        setAiSummary('Failed to load real-time AI Executive insights. Please refresh.');
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchInsights();
+  }, [selectedStadiumId]);
 
   return (
     <DashboardLayout>
@@ -131,12 +166,17 @@ export default function OrganizerHub() {
                 <Sparkles className="h-5 w-5 text-primary" />
                 <h3 className="font-bold text-sm text-primary">AI Executive Advisor</h3>
               </div>
-              <p className="text-xs text-muted-foreground leading-relaxed">
-                Operations at <strong>{stadium.name}</strong> are running optimally. Gate queue speeds average 95 seconds. Public transit capacity is sufficient.
-              </p>
-              <div className="p-3 bg-muted/60 rounded-lg border border-border/40 text-[11px] text-muted-foreground">
-                📌 Security shift changes occur in 25 minutes. No resource adjustments needed.
-              </div>
+              {loading ? (
+                <div className="space-y-2 animate-pulse py-2">
+                  <div className="h-3 bg-muted rounded w-5/6" />
+                  <div className="h-3 bg-muted rounded w-full" />
+                  <div className="h-3 bg-muted rounded w-2/3" />
+                </div>
+              ) : (
+                <div className="text-xs text-slate-300 leading-relaxed whitespace-pre-wrap">
+                  {aiSummary}
+                </div>
+              )}
             </GlassCard>
           </div>
         </div>

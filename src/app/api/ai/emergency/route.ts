@@ -44,8 +44,8 @@ export async function POST(request: NextRequest) {
     ];
 
     const response = await askGemini({
-      systemPrompt: SYSTEM_PROMPTS.emergency,
-      userMessage: `URGENT: Emergency of type "${sanitizeInput(incidentType)}" has occurred. Please provide instant response protocols, first-aid, evacuation directions or security measures.`,
+      systemPrompt: `${SYSTEM_PROMPTS.emergency}\n\nProvide the emergency response protocol as a clean markdown document structured exactly with the following sections:\n🚨 **Priority**:\n⚠️ **Risk Level**:\n👣 **Immediate Actions**:\n🛣️ **Nearest Safe Route**:\n🏥 **Nearest Medical Point**:\n📞 **Who should be contacted**:\n📋 **Operational Summary**:`,
+      userMessage: `URGENT: Emergency of type "${sanitizeInput(incidentType)}" has occurred.`,
       context: contextParts.filter(Boolean).join('\n'),
     });
 

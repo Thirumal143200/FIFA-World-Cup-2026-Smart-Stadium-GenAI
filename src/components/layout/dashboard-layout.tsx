@@ -5,6 +5,7 @@
 import { Header } from './header';
 import { Sidebar } from './sidebar';
 import { MobileNav } from './mobile-nav';
+import { AICopilot } from '../ui/AICopilot';
 import { type ReactNode } from 'react';
 
 interface DashboardLayoutProps {
@@ -40,6 +41,9 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
           </div>
         </main>
       </div>
+
+      {/* Floating persistent AI Copilot */}
+      <AICopilot />
 
       {/* Tab bar for mobile viewports */}
       <MobileNav />

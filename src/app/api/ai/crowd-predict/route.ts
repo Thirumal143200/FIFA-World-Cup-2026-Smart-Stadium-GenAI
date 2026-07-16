@@ -61,7 +61,7 @@ export async function POST(request: NextRequest) {
     ];
 
     const response = await askGemini({
-      systemPrompt: SYSTEM_PROMPTS.crowdPrediction,
+      systemPrompt: `${SYSTEM_PROMPTS.crowdPrediction}\n\nAnalyze the stadium context and generate a report structured exactly with the following sections:\n📊 **Crowd Risk Score (1-100)**:\n🔮 **Congestion Prediction**:\n🔀 **Suggested Redirection**:\n🚪 **Gate Recommendations**:\n🛡️ **Security Recommendations**:\n🧠 **Reasoning & Explanations**:`,
       userMessage: `Please predict crowd patterns and generate recommendations for safety, logistics, and crowd redirection.`,
       context: contextParts.join('\n'),
     });

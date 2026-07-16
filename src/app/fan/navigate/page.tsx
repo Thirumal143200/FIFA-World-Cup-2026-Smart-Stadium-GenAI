@@ -25,6 +25,10 @@ export default function FanNavigate() {
 
   const [from, setFrom] = useState('');
   const [to, setTo] = useState('');
+  const [hotel, setHotel] = useState('');
+  const [parking, setParking] = useState('');
+  const [seat, setSeat] = useState('');
+  const [transportPreference, setTransportPreference] = useState('Metro');
   const [loading, setLoading] = useState(false);
   const [routeExplanation, setRouteExplanation] = useState<string | null>(null);
 
@@ -49,6 +53,10 @@ export default function FanNavigate() {
                 .map(([k]) => k)
             : [],
           avoidCrowded: true,
+          hotel,
+          parking,
+          seat,
+          transportPreference,
         }),
       });
 
@@ -86,7 +94,7 @@ export default function FanNavigate() {
               <form onSubmit={handleNavigate} className="space-y-4">
                 <div>
                   <label htmlFor="from-input" className="block text-xs font-semibold text-muted-foreground mb-1">
-                    STARTING LOCATION
+                    STARTING LOCATION *
                   </label>
                   <input
                     id="from-input"
@@ -101,7 +109,7 @@ export default function FanNavigate() {
 
                 <div>
                   <label htmlFor="to-input" className="block text-xs font-semibold text-muted-foreground mb-1">
-                    DESTINATION
+                    DESTINATION *
                   </label>
                   <input
                     id="to-input"
@@ -112,6 +120,68 @@ export default function FanNavigate() {
                     className="w-full h-10 px-3 rounded-lg border border-border bg-background text-sm focus:outline-none focus:ring-2 focus:ring-ring"
                     required
                   />
+                </div>
+
+                <div className="grid grid-cols-2 gap-2">
+                  <div>
+                    <label htmlFor="hotel-input" className="block text-[10px] font-semibold text-muted-foreground mb-1">
+                      HOTEL
+                    </label>
+                    <input
+                      id="hotel-input"
+                      type="text"
+                      value={hotel}
+                      onChange={(e) => setHotel(e.target.value)}
+                      placeholder="Hotel name"
+                      className="w-full h-9 px-2 rounded-lg border border-border bg-background text-xs focus:outline-none focus:ring-2 focus:ring-ring"
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="parking-input" className="block text-[10px] font-semibold text-muted-foreground mb-1">
+                      PARKING LOT
+                    </label>
+                    <input
+                      id="parking-input"
+                      type="text"
+                      value={parking}
+                      onChange={(e) => setParking(e.target.value)}
+                      placeholder="e.g., Lot J"
+                      className="w-full h-9 px-2 rounded-lg border border-border bg-background text-xs focus:outline-none focus:ring-2 focus:ring-ring"
+                    />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-2">
+                  <div>
+                    <label htmlFor="seat-input" className="block text-[10px] font-semibold text-muted-foreground mb-1">
+                      SEAT NUMBER
+                    </label>
+                    <input
+                      id="seat-input"
+                      type="text"
+                      value={seat}
+                      onChange={(e) => setSeat(e.target.value)}
+                      placeholder="e.g., Sec 112 Row D"
+                      className="w-full h-9 px-2 rounded-lg border border-border bg-background text-xs focus:outline-none focus:ring-2 focus:ring-ring"
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="transport-select" className="block text-[10px] font-semibold text-muted-foreground mb-1">
+                      TRANSIT TYPE
+                    </label>
+                    <select
+                      id="transport-select"
+                      value={transportPreference}
+                      onChange={(e) => setTransportPreference(e.target.value)}
+                      className="w-full h-9 px-2 rounded-lg border border-border bg-background text-xs focus:outline-none focus:ring-2 focus:ring-ring"
+                    >
+                      <option value="Metro">Metro</option>
+                      <option value="Bus">Bus</option>
+                      <option value="Taxi">Taxi</option>
+                      <option value="Ride Share">Ride Share</option>
+                      <option value="Walking">Walking</option>
+                    </select>
+                  </div>
                 </div>
 
                 {accessibility.enabled && (

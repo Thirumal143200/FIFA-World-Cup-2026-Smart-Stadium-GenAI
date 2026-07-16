@@ -3,7 +3,7 @@
 
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { DashboardLayout } from '@/components/layout/dashboard-layout';
 import { useStadiumStore } from '@/store/stadium-store';
 import { useUserStore } from '@/store/user-store';
@@ -33,7 +33,7 @@ export default function VolunteerHub() {
     setTasks((prev) => prev.map((t) => (t.id === id ? { ...t, done: !t.done } : t)));
   };
 
-  const getAiVolunteerBriefing = async () => {
+  const getAiVolunteerBriefing = useCallback(async () => {
     setLoadingBrief(true);
     setVolunteerBrief(null);
     try {
@@ -60,7 +60,12 @@ export default function VolunteerHub() {
     } finally {
       setLoadingBrief(false);
     }
-  };
+  }, [selectedStadiumId]);
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    getAiVolunteerBriefing();
+  }, [getAiVolunteerBriefing]);
 
   return (
     <DashboardLayout>

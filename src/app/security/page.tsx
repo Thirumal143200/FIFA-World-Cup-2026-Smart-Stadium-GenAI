@@ -23,21 +23,43 @@ export default function SecurityHub() {
   const [threatBrief, setThreatBrief] = useState<string | null>(null);
 
   useEffect(() => {
-    async function fetchIncidents() {
+    async function fetchIncidentsAndAssess() {
       try {
         setLoading(true);
         const res = await fetch(`/api/incidents?stadiumId=${selectedStadiumId}`);
         const data = await res.json();
+        let securityIncidentsCount = 0;
         if (res.ok) {
           setIncidents(data);
+          securityIncidentsCount = data.filter((inc: Incident) => inc.category === 'security' && inc.status !== 'resolved').length;
+        }
+
+        // Auto assess threat level using operational API
+        setLoadingThreat(true);
+        setThreatBrief(null);
+        const operationalRes = await fetch('/api/ai/operational', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            stadiumId: selectedStadiumId,
+            currentStaffCount: 320,
+            activeIncidentsCount: securityIncidentsCount,
+            matchStage: 'mid-game',
+          }),
+        });
+        const operationalData = await operationalRes.json();
+        if (operationalRes.ok) {
+          setThreatBrief(operationalData.insights);
         }
       } catch (err) {
         console.error(err);
+        setThreatBrief('Failed to load real-time AI security threat assessments.');
       } finally {
         setLoading(false);
+        setLoadingThreat(false);
       }
     }
-    fetchIncidents();
+    fetchIncidentsAndAssess();
   }, [selectedStadiumId]);
 
   const activeSecurityIncidents = incidents.filter((inc) => inc.category === 'security' && inc.status !== 'resolved');

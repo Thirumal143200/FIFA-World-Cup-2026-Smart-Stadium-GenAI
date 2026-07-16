@@ -41,7 +41,7 @@ export async function POST(request: NextRequest) {
     ];
 
     const response = await askGemini({
-      systemPrompt: SYSTEM_PROMPTS.sustainability,
+      systemPrompt: `${SYSTEM_PROMPTS.sustainability}\n\nProvide the sustainability advice as a clean markdown report structured exactly with the following sections:\n🚗 **Low-Carbon Travel Recommendations**:\n💧 **Reusable Bottle Stations**:\n♻️ **Waste Disposal & Recycling Locations**:\n⚡ **Energy-Saving Suggestions**:\n🌱 **Eco-Friendly Routes**:\n👥 **Crowd Distribution to Reduce Emissions**:`,
       userMessage: 'Analyze our current metrics, calculate personal carbon footprint recommendations, and offer sustainable actions.',
       context: contextParts.filter(Boolean).join('\n'),
     });

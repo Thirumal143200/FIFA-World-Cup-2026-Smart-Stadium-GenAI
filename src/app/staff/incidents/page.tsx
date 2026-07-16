@@ -37,6 +37,40 @@ export default function StaffIncidents() {
   const [landmark, setLandmark] = useState('');
   const [reporting, setReporting] = useState(false);
 
+  interface AISummary {
+    priority?: string;
+    recommendedStaff?: string;
+    suggestedResponse?: string;
+    operationalSummary?: string;
+  }
+
+  const [loadingAI, setLoadingAI] = useState(false);
+  const [aiSummary, setAiSummary] = useState<AISummary | null>(null);
+
+  const handleAISummarize = async () => {
+    if (!desc.trim() || loadingAI) return;
+    setLoadingAI(true);
+    setAiSummary(null);
+    try {
+      const res = await fetch('/api/ai/incident-summarizer', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ description: desc }),
+      });
+      const data = await res.json();
+      if (res.ok && data.summary) {
+        setTitle(data.summary.title || '');
+        setCategory(data.summary.category || 'other');
+        setSeverity(data.summary.severity || 'medium');
+        setAiSummary(data.summary);
+      }
+    } catch (err) {
+      console.error('Incident AI Summary error:', err);
+    } finally {
+      setLoadingAI(false);
+    }
+  };
+
   // Response / notes form
   const [activeNotesId, setActiveNotesId] = useState<string | null>(null);
   const [notes, setNotes] = useState('');
@@ -224,18 +258,54 @@ export default function StaffIncidents() {
               </div>
 
               <div className="sm:col-span-2">
-                <label className="block text-xs font-semibold text-muted-foreground mb-1">DESCRIPTION</label>
+                <div className="flex justify-between items-center mb-1">
+                  <label className="block text-xs font-semibold text-muted-foreground">DESCRIPTION</label>
+                  <button
+                    type="button"
+                    onClick={handleAISummarize}
+                    disabled={!desc.trim() || loadingAI}
+                    className="inline-flex items-center gap-1 text-[10px] font-bold text-emerald-400 hover:text-emerald-300 disabled:opacity-50 transition-colors uppercase"
+                  >
+                    ✨ AI Structure Report
+                  </button>
+                </div>
                 <textarea
                   value={desc}
                   onChange={(e) => setDesc(e.target.value)}
-                  placeholder="Describe the incident detail and required units..."
+                  placeholder="e.g., There are too many people near Gate B."
                   className="w-full p-3 rounded-lg border border-border bg-background text-sm focus:outline-none focus:ring-2 focus:ring-ring min-h-20"
                   required
                 />
               </div>
 
+              {/* AI Structured Outputs */}
+              {aiSummary && (
+                <div className="sm:col-span-2 p-4 rounded-xl border border-emerald-500/30 bg-emerald-500/5 space-y-3">
+                  <div className="flex items-center gap-1.5 font-bold text-xs text-emerald-400">
+                    <span>✨ AI Structured Recommendation:</span>
+                  </div>
+                  <div className="grid gap-3 sm:grid-cols-3 text-xs">
+                    <div className="p-2.5 bg-background/50 rounded-lg border border-border/40">
+                      <span className="text-[10px] text-muted-foreground uppercase font-bold block">Priority</span>
+                      <strong className="text-emerald-400 capitalize">{aiSummary.priority || 'Medium'}</strong>
+                    </div>
+                    <div className="p-2.5 bg-background/50 rounded-lg border border-border/40">
+                      <span className="text-[10px] text-muted-foreground uppercase font-bold block">Recommended Staff</span>
+                      <strong className="text-slate-200">{aiSummary.recommendedStaff || 'Security Patrol'}</strong>
+                    </div>
+                    <div className="p-2.5 bg-background/50 rounded-lg border border-border/40">
+                      <span className="text-[10px] text-muted-foreground uppercase font-bold block">Suggested Response</span>
+                      <p className="text-slate-300 font-medium leading-relaxed mt-0.5">{aiSummary.suggestedResponse}</p>
+                    </div>
+                  </div>
+                  <div className="text-xs border-t border-border/20 pt-2 text-slate-300 leading-relaxed">
+                    <strong>Operational Summary:</strong> {aiSummary.operationalSummary}
+                  </div>
+                </div>
+              )}
+
               <div className="sm:col-span-2 flex justify-end gap-2.5">
-                <ActionButton variant="outline" type="button" onClick={() => setShowForm(false)}>
+                <ActionButton variant="outline" type="button" onClick={() => { setShowForm(false); setAiSummary(null); }}>
                   Cancel
                 </ActionButton>
                 <ActionButton variant="primary" type="submit" loading={reporting}>

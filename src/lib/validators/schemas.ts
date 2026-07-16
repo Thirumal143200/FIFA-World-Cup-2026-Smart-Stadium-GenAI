@@ -54,6 +54,10 @@ export const AINavigationSchema = z.object({
   accessibilityNeeds: z.array(z.string()).optional(),
   avoidCrowded: z.boolean().optional(),
   preferElevator: z.boolean().optional(),
+  hotel: z.string().optional(),
+  parking: z.string().optional(),
+  seat: z.string().optional(),
+  transportPreference: z.string().optional(),
 });
 
 /**

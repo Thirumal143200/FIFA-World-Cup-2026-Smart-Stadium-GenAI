@@ -6,7 +6,7 @@ import { useState } from 'react';
 import { GlassCard } from '@/components/ui/GlassCard';
 import { FifaBadge } from '@/components/ui/FifaBadge';
 import { useStadiumStore } from '@/store/stadium-store';
-import { AlertOctagon, ShieldAlert, Phone, ArrowLeft, Heart, Flame, Shield } from 'lucide-react';
+import { AlertOctagon, ShieldAlert, Phone, ArrowLeft, Heart, Flame, Activity, Eye, Briefcase } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
 export default function EmergencyHub() {
@@ -75,45 +75,87 @@ export default function EmergencyHub() {
         </div>
 
         {/* Triggers */}
-        <div className="grid gap-4 sm:grid-cols-3">
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           <button
-            onClick={() => triggerSOS('medical')}
+            onClick={() => triggerSOS('Medical Emergency')}
             className="text-left focus:outline-none focus:ring-2 focus:ring-red-500 rounded-xl"
             disabled={loading}
           >
-            <GlassCard hover className="bg-red-500/5 hover:bg-red-500/10 border border-red-500/20 flex flex-col justify-between h-full p-6 space-y-4">
-              <Heart className="h-8 w-8 text-red-500" />
+            <GlassCard hover className="bg-red-500/5 hover:bg-red-500/10 border border-red-500/20 flex flex-col justify-between h-full p-5 space-y-4">
+              <Heart className="h-7 w-7 text-red-500" />
               <div>
-                <h2 className="font-extrabold text-base">Medical Help</h2>
-                <p className="text-xs text-muted-foreground mt-1">Cardiac distress, heat stroke, severe physical injuries.</p>
+                <h2 className="font-extrabold text-sm">Medical Emergency</h2>
+                <p className="text-[11px] text-muted-foreground mt-1">Cardiac distress, heat stroke, physical trauma.</p>
               </div>
             </GlassCard>
           </button>
 
           <button
-            onClick={() => triggerSOS('fire')}
+            onClick={() => triggerSOS('Fire')}
             className="text-left focus:outline-none focus:ring-2 focus:ring-red-500 rounded-xl"
             disabled={loading}
           >
-            <GlassCard hover className="bg-orange-500/5 hover:bg-orange-500/10 border border-orange-500/20 flex flex-col justify-between h-full p-6 space-y-4">
-              <Flame className="h-8 w-8 text-orange-500" />
+            <GlassCard hover className="bg-orange-500/5 hover:bg-orange-500/10 border border-orange-500/20 flex flex-col justify-between h-full p-5 space-y-4">
+              <Flame className="h-7 w-7 text-orange-500" />
               <div>
-                <h2 className="font-extrabold text-base">Fire / Smoke</h2>
-                <p className="text-xs text-muted-foreground mt-1">Smoke alarms, active fires, localized facility danger.</p>
+                <h2 className="font-extrabold text-sm">Fire / Smoke</h2>
+                <p className="text-[11px] text-muted-foreground mt-1">Localized fires, active smoke detector warnings.</p>
               </div>
             </GlassCard>
           </button>
 
           <button
-            onClick={() => triggerSOS('security')}
+            onClick={() => triggerSOS('Missing Child')}
             className="text-left focus:outline-none focus:ring-2 focus:ring-red-500 rounded-xl"
             disabled={loading}
           >
-            <GlassCard hover className="bg-blue-500/5 hover:bg-blue-500/10 border border-blue-500/20 flex flex-col justify-between h-full p-6 space-y-4">
-              <Shield className="h-8 w-8 text-blue-500" />
+            <GlassCard hover className="bg-purple-500/5 hover:bg-purple-500/10 border border-purple-500/20 flex flex-col justify-between h-full p-5 space-y-4">
+              <AlertOctagon className="h-7 w-7 text-purple-500" />
               <div>
-                <h2 className="font-extrabold text-base">Security Dispute</h2>
-                <p className="text-xs text-muted-foreground mt-1">Crowd crush risks, active fights, suspicious bags.</p>
+                <h2 className="font-extrabold text-sm">Missing Child</h2>
+                <p className="text-[11px] text-muted-foreground mt-1">Report lost children or family separation instantly.</p>
+              </div>
+            </GlassCard>
+          </button>
+
+          <button
+            onClick={() => triggerSOS('Suspicious Activity')}
+            className="text-left focus:outline-none focus:ring-2 focus:ring-red-500 rounded-xl"
+            disabled={loading}
+          >
+            <GlassCard hover className="bg-blue-500/5 hover:bg-blue-500/10 border border-blue-500/20 flex flex-col justify-between h-full p-5 space-y-4">
+              <Eye className="h-7 w-7 text-blue-500" />
+              <div>
+                <h2 className="font-extrabold text-sm">Suspicious Activity</h2>
+                <p className="text-[11px] text-muted-foreground mt-1">Unattended luggage, suspicious behaviors near gates.</p>
+              </div>
+            </GlassCard>
+          </button>
+
+          <button
+            onClick={() => triggerSOS('Stampede')}
+            className="text-left focus:outline-none focus:ring-2 focus:ring-red-500 rounded-xl"
+            disabled={loading}
+          >
+            <GlassCard hover className="bg-rose-500/5 hover:bg-rose-500/10 border border-rose-500/20 flex flex-col justify-between h-full p-5 space-y-4">
+              <Activity className="h-7 w-7 text-rose-500" />
+              <div>
+                <h2 className="font-extrabold text-sm">Stampede / Crowd Crush</h2>
+                <p className="text-[11px] text-muted-foreground mt-1">Congestion peaks, gate line surges, crush hazards.</p>
+              </div>
+            </GlassCard>
+          </button>
+
+          <button
+            onClick={() => triggerSOS('Lost Property')}
+            className="text-left focus:outline-none focus:ring-2 focus:ring-red-500 rounded-xl"
+            disabled={loading}
+          >
+            <GlassCard hover className="bg-teal-500/5 hover:bg-teal-500/10 border border-teal-500/20 flex flex-col justify-between h-full p-5 space-y-4">
+              <Briefcase className="h-7 w-7 text-teal-500" />
+              <div>
+                <h2 className="font-extrabold text-sm">Lost Property</h2>
+                <p className="text-[11px] text-muted-foreground mt-1">Recover lost electronics, passports, wallet logs.</p>
               </div>
             </GlassCard>
           </button>

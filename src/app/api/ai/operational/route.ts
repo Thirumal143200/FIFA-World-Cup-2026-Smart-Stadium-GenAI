@@ -43,7 +43,7 @@ export async function POST(request: NextRequest) {
     ];
 
     const response = await askGemini({
-      systemPrompt: SYSTEM_PROMPTS.operational,
+      systemPrompt: `${SYSTEM_PROMPTS.operational}\n\nAnalyze the stadium operations data and generate an executive report structured exactly with the following sections:\n📋 **Current Operations**:\n📈 **Incident Trends**:\n🔮 **Crowd Forecast**:\n🚇 **Transport Status**:\n🙋 **Volunteer Status**:\n🚪 **Gate Performance**:\n🛡️ **Security Recommendations**:`,
       userMessage: 'Generate operational insights, resource optimization plan, risk assessment, and staffing recommendations.',
       context: contextParts.filter(Boolean).join('\n'),
     });
