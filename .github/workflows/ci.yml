@@ -20,20 +20,44 @@ jobs:
         node-version: 20
         cache: 'npm'
 
-    - name: Install Dependencies
-      run: npm ci
+    - name: Environment Diagnostics
+      run: |
+        echo "=== CLI Versions ==="
+        node -v
+        npm -v
+        echo "=== Directory Listing ==="
+        ls -la
+        echo "=== Package-lock Existence Check ==="
+        if [ -f "package-lock.json" ]; then
+          echo "package-lock.json exists."
+        else
+          echo "WARNING: package-lock.json NOT found!"
+        fi
 
-    - name: Type Check
-      run: npx tsc --noEmit
+    - name: Install Dependencies (Verbose)
+      run: |
+        npm ci --verbose
 
-    - name: Run Linting
-      run: npm run lint
+    - name: Dependency Tree diagnostics
+      run: |
+        echo "=== npm ls ==="
+        npm ls || true
 
-    - name: Run Tests
-      run: npm run test
+    - name: Type Check (with Extended Diagnostics)
+      run: |
+        npx tsc --noEmit --extendedDiagnostics
+
+    - name: Run Linting (stylish format)
+      run: |
+        npm run lint -- --format stylish
+
+    - name: Run Tests (Verbose)
+      run: |
+        npm run test -- --verbose
 
     - name: Build Application
-      run: npm run build
+      run: |
+        npm run build
       env:
         NEXT_PUBLIC_FIREBASE_API_KEY: demo-key
         NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN: demo.firebaseapp.com
