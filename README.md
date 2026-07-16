@@ -8,6 +8,8 @@
 [![Google Gemini AI](https://img.shields.io/badge/Google_Gemini-API_Enabled-orange.svg)](https://ai.google.dev/)
 [![WCAG AA](https://img.shields.io/badge/WCAG-2.2_AA_Compliant-success.svg)](#accessibility)
 
+**Live Production URL**: [https://fifa-stadium-ai-navy.vercel.app](https://fifa-stadium-ai-navy.vercel.app)
+
 Next-Generation AI-powered operational and guest assistance platform built for the **FIFA World Cup 2026™** spanning USA, Mexico, and Canada.
 
 ---
