@@ -1,7 +1,7 @@
 // src/lib/validators/schemas.ts
 // Zod validation schemas for all API endpoints
 
-import { z } from 'zod/v4';
+import { z } from 'zod';
 
 /**
  * AI Chat request validation.
@@ -21,6 +21,14 @@ export const AIChatSchema = z.object({
     'sustainability',
     'operational',
   ]).default('chat'),
+  history: z
+    .array(
+      z.object({
+        role: z.enum(['user', 'model', 'assistant']),
+        content: z.string(),
+      })
+    )
+    .optional(),
   context: z
     .object({
       userRole: z.string().optional(),

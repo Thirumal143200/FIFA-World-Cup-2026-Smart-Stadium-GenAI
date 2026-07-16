@@ -19,6 +19,9 @@ export default function SecurityHub() {
   const [incidents, setIncidents] = useState<Incident[]>([]);
   const [loading, setLoading] = useState(true);
 
+  const [loadingThreat, setLoadingThreat] = useState(false);
+  const [threatBrief, setThreatBrief] = useState<string | null>(null);
+
   useEffect(() => {
     async function fetchIncidents() {
       try {
@@ -38,6 +41,31 @@ export default function SecurityHub() {
   }, [selectedStadiumId]);
 
   const activeSecurityIncidents = incidents.filter((inc) => inc.category === 'security' && inc.status !== 'resolved');
+
+  const getThreatAssessment = async () => {
+    setLoadingThreat(true);
+    setThreatBrief(null);
+    try {
+      const res = await fetch('/api/ai/operational', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          stadiumId: selectedStadiumId,
+          currentStaffCount: 320,
+          activeIncidentsCount: activeSecurityIncidents.length,
+          matchStage: 'mid-game',
+        }),
+      });
+      const data = await res.json();
+      if (res.ok) {
+        setThreatBrief(data.insights);
+      }
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoadingThreat(false);
+    }
+  };
 
   return (
     <DashboardLayout>
@@ -140,13 +168,26 @@ export default function SecurityHub() {
           {/* Quick links & AI Support */}
           <div className="lg:col-span-1 space-y-6">
             <GlassCard variant="glass" className="space-y-4 bg-red-500/5 border border-red-500/20">
-              <div className="flex items-center gap-2">
-                <Sparkles className="h-5 w-5 text-red-500" />
-                <h3 className="font-bold text-sm text-red-600 dark:text-red-400">AI Threat Advisor</h3>
+              <div className="flex items-center justify-between border-b border-red-550/10 pb-2">
+                <div className="flex items-center gap-2">
+                  <Sparkles className="h-5 w-5 text-red-500" />
+                  <h3 className="font-bold text-sm text-red-600 dark:text-red-400">AI Threat Advisor</h3>
+                </div>
+                <ActionButton variant="danger" size="sm" onClick={getThreatAssessment} loading={loadingThreat} className="h-7 text-[10px] px-2">
+                  Assess
+                </ActionButton>
               </div>
-              <p className="text-xs text-muted-foreground leading-relaxed">
-                Crowd flows are stable. Security patrols should remain focused on concourse entrances during Gate Exit phase.
-              </p>
+
+              {threatBrief ? (
+                <div className="text-xs prose dark:prose-invert max-w-none whitespace-pre-wrap leading-relaxed">
+                  {threatBrief}
+                </div>
+              ) : (
+                <p className="text-xs text-muted-foreground leading-relaxed">
+                  Click the button above to generate a real-time Gemini-powered threat evaluation based on active alerts.
+                </p>
+              )}
+
               <ActionButton variant="outline" fullWidth size="sm" onClick={() => router.push('/security/crowd')}>
                 Analyze Crowd Heatmap
               </ActionButton>

@@ -31,10 +31,10 @@ const tabItems: Record<string, TabItem[]> = {
     { href: '/fan/chat', label: 'AI Chat', icon: <MessageSquare className="h-5 w-5" /> },
     { href: '/fan/transport', label: 'Transit', icon: <Bus className="h-5 w-5" /> },
   ],
-  staff: [
-    { href: '/staff', label: 'Dashboard', icon: <LayoutDashboard className="h-5 w-5" /> },
-    { href: '/staff/incidents', label: 'Incidents', icon: <AlertOctagon className="h-5 w-5" /> },
-    { href: '/staff/crowd', label: 'Crowd Flow', icon: <Users2 className="h-5 w-5" /> },
+  volunteer: [
+    { href: '/volunteer', label: 'Dashboard', icon: <LayoutDashboard className="h-5 w-5" /> },
+    { href: '/volunteer/incidents', label: 'Incidents', icon: <AlertOctagon className="h-5 w-5" /> },
+    { href: '/volunteer/crowd', label: 'Crowd Flow', icon: <Users2 className="h-5 w-5" /> },
   ],
   organizer: [
     { href: '/organizer', label: 'Command', icon: <LayoutDashboard className="h-5 w-5" /> },
@@ -45,6 +45,10 @@ const tabItems: Record<string, TabItem[]> = {
     { href: '/security', label: 'Security', icon: <Shield className="h-5 w-5" /> },
     { href: '/security/incidents', label: 'Incidents', icon: <AlertOctagon className="h-5 w-5" /> },
     { href: '/security/crowd', label: 'Crowd', icon: <Users2 className="h-5 w-5" /> },
+  ],
+  admin: [
+    { href: '/admin', label: 'Admin', icon: <LayoutDashboard className="h-5 w-5" /> },
+    { href: '/profile', label: 'Profile', icon: <Home className="h-5 w-5" /> },
   ],
 };
 

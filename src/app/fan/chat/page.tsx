@@ -47,6 +47,13 @@ export default function FanChat() {
     setInput('');
     setLoading(true);
 
+    const historyPayload = messages
+      .slice(-10)
+      .map((msg) => ({
+        role: msg.role === 'user' ? 'user' as const : 'assistant' as const,
+        content: msg.content,
+      }));
+
     try {
       const response = await fetch('/api/ai/chat', {
         method: 'POST',
@@ -56,6 +63,7 @@ export default function FanChat() {
           language,
           stadiumId: selectedStadiumId,
           module: 'chat',
+          history: historyPayload,
           context: {
             userRole: role,
           },

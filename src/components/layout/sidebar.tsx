@@ -38,10 +38,10 @@ const navItems: Record<string, SidebarItem[]> = {
     { href: '/fan/accessibility', label: 'Accessibility', icon: <Accessibility className="h-5 w-5" /> },
     { href: '/fan/sustainability', label: 'Eco-Dashboard', icon: <Leaf className="h-5 w-5" /> },
   ],
-  staff: [
-    { href: '/staff', label: 'Staff Hub', icon: <LayoutDashboard className="h-5 w-5" /> },
-    { href: '/staff/incidents', label: 'Incidents Log', icon: <AlertOctagon className="h-5 w-5" /> },
-    { href: '/staff/crowd', label: 'Crowd Flow', icon: <Users2 className="h-5 w-5" /> },
+  volunteer: [
+    { href: '/volunteer', label: 'Volunteer Hub', icon: <LayoutDashboard className="h-5 w-5" /> },
+    { href: '/volunteer/incidents', label: 'Incidents Log', icon: <AlertOctagon className="h-5 w-5" /> },
+    { href: '/volunteer/crowd', label: 'Crowd Flow', icon: <Users2 className="h-5 w-5" /> },
   ],
   organizer: [
     { href: '/organizer', label: 'Command Center', icon: <LayoutDashboard className="h-5 w-5" /> },
@@ -54,6 +54,10 @@ const navItems: Record<string, SidebarItem[]> = {
     { href: '/security', label: 'Security Hub', icon: <Shield className="h-5 w-5" /> },
     { href: '/security/incidents', label: 'Active Incidents', icon: <AlertOctagon className="h-5 w-5" /> },
     { href: '/security/crowd', label: 'Crowd Heatmap', icon: <Users2 className="h-5 w-5" /> },
+  ],
+  admin: [
+    { href: '/admin', label: 'Admin Console', icon: <LayoutDashboard className="h-5 w-5" /> },
+    { href: '/profile', label: 'System Prefs', icon: <BrainCircuit className="h-5 w-5" /> },
   ],
 };
 

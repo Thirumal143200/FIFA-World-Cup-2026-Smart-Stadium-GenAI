@@ -41,11 +41,11 @@ const roleCards: {
     gradient: 'from-blue-500/20 to-cyan-500/10',
   },
   {
-    role: 'staff',
-    title: 'Stadium Staff',
-    description: 'Monitor crowd flow, manage incidents, and coordinate operations in real time.',
+    role: 'volunteer',
+    title: 'Stadium Volunteer',
+    description: 'Access checklists, support wayfinding, review crowd flows, and report incidents.',
     icon: <Headset className="h-7 w-7" />,
-    features: ['Crowd Monitoring', 'Incident Management', 'Zone Alerts', 'Team Coordination'],
+    features: ['Volunteer Checklists', 'AI Incident Logs', 'Crowd flow tracking', 'Volunteer briefings'],
     color: 'text-emerald-500',
     gradient: 'from-emerald-500/20 to-green-500/10',
   },
@@ -66,6 +66,15 @@ const roleCards: {
     features: ['Threat Detection', 'Crowd Heatmap', 'Emergency Response', 'Incident Logs'],
     color: 'text-red-500',
     gradient: 'from-red-500/20 to-orange-500/10',
+  },
+  {
+    role: 'admin',
+    title: 'System Administrator',
+    description: 'Full infrastructure control, database bindings, diagnostic tools, and AI telemetry logs.',
+    icon: <Sparkles className="h-7 w-7 text-primary" />,
+    features: ['AI Telemetry logs', 'Diagnostics tool', 'Active Sessions directory', 'Security overrides'],
+    color: 'text-indigo-500',
+    gradient: 'from-indigo-500/20 to-purple-500/10',
   },
 ];
 

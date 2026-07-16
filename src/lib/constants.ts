@@ -26,10 +26,10 @@ export const ROUTES = {
     accessibility: '/fan/accessibility',
     sustainability: '/fan/sustainability',
   },
-  staff: {
-    hub: '/staff',
-    incidents: '/staff/incidents',
-    crowd: '/staff/crowd',
+  volunteer: {
+    hub: '/volunteer',
+    incidents: '/volunteer/incidents',
+    crowd: '/volunteer/crowd',
   },
   organizer: {
     hub: '/organizer',
@@ -42,6 +42,9 @@ export const ROUTES = {
     hub: '/security',
     incidents: '/security/incidents',
     crowd: '/security/crowd',
+  },
+  admin: {
+    hub: '/admin',
   },
   emergency: '/emergency',
 } as const;

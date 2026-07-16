@@ -38,7 +38,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const { message, language, stadiumId, module, context } = parsed.data;
+    const { message, language, stadiumId, module, context, history } = parsed.data;
 
     // Sanitize input
     const sanitizedMessage = sanitizeInput(message);
@@ -59,6 +59,10 @@ export async function POST(request: NextRequest) {
       ? `User Role: ${context.userRole || 'fan'}\nAccessibility Needs: ${context.accessibilityNeeds?.join(', ') || 'None'}\nCurrent Zone: ${context.currentZone || 'Unknown'}`
       : '';
 
+    const historyContext = history && history.length > 0
+      ? `Recent Conversation History:\n${history.map((msg) => `${msg.role === 'user' ? 'User' : 'Assistant'}: ${msg.content}`).join('\n')}`
+      : '';
+
     // Select the appropriate system prompt based on module
     const promptKey = module === 'crowd-prediction'
       ? 'crowdPrediction'
@@ -75,6 +79,7 @@ export async function POST(request: NextRequest) {
       context: [
         stadiumContext,
         userContext,
+        historyContext,
         `User Language: ${language}`,
         `Response Language: Respond in ${language}`,
       ]

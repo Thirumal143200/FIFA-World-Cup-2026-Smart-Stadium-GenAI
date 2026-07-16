@@ -4,6 +4,7 @@
 import type { Metadata, Viewport } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
 import { ThemeProvider } from '@/components/providers/theme-provider';
+import { AuthProvider } from '@/components/providers/auth-provider';
 import './globals.css';
 
 const geistSans = Geist({
@@ -91,7 +92,9 @@ export default function RootLayout({
             className="sr-only"
             role="status"
           />
-          {children}
+          <AuthProvider>
+            {children}
+          </AuthProvider>
         </ThemeProvider>
       </body>
     </html>

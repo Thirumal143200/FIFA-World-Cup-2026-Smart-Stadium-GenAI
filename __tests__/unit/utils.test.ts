@@ -38,4 +38,20 @@ describe('Utility Functions', () => {
       expect(getDensityLabel(0.95)).toBe('Critical');
     });
   });
+
+  describe('getLanguageDirection', () => {
+    it('returns rtl for Arabic, Hebrew, Urdu', () => {
+      const { getLanguageDirection } = require('@/lib/utils');
+      expect(getLanguageDirection('ar')).toBe('rtl');
+      expect(getLanguageDirection('he')).toBe('rtl');
+      expect(getLanguageDirection('ur')).toBe('rtl');
+    });
+
+    it('returns ltr for English, Spanish, Vietnamese', () => {
+      const { getLanguageDirection } = require('@/lib/utils');
+      expect(getLanguageDirection('en')).toBe('ltr');
+      expect(getLanguageDirection('es')).toBe('ltr');
+      expect(getLanguageDirection('vi')).toBe('ltr');
+    });
+  });
 });

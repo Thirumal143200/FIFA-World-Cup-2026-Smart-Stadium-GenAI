@@ -90,6 +90,7 @@ export default function StaffCrowd() {
               <LeafletMap
                 lat={stadium.coordinates.lat}
                 lng={stadium.coordinates.lng}
+                stadiumId={selectedStadiumId}
                 heatmapZones={stadium.zones.map((zone, idx) => {
                   const angle = (idx / stadium.zones.length) * 2 * Math.PI;
                   const latOffset = Math.sin(angle) * 0.0015;

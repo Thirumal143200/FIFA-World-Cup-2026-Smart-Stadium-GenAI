@@ -169,6 +169,7 @@ export default function FanNavigate() {
               <LeafletMap
                 lat={stadium.coordinates.lat}
                 lng={stadium.coordinates.lng}
+                stadiumId={selectedStadiumId}
                 navigationPath={from && to ? { fromName: from, toName: to } : undefined}
               />
               {/* Status overlay */}
@@ -176,6 +177,21 @@ export default function FanNavigate() {
                 <FifaBadge variant="success" pulse>
                   Live OpenStreetMap Active
                 </FifaBadge>
+              </div>
+
+              {/* Map Legend Panel */}
+              <div className="absolute bottom-4 right-4 z-10 bg-background/90 backdrop-blur-md border border-border/80 p-2.5 rounded-lg shadow-lg text-[10px] space-y-1.5 w-36 select-none">
+                <div className="font-bold text-[9px] uppercase tracking-wider text-muted-foreground border-b border-border/50 pb-1 mb-1">
+                  Map Legend
+                </div>
+                <div className="grid grid-cols-2 gap-x-2 gap-y-1">
+                  <div className="flex items-center gap-1"><span>🚪</span> <span className="truncate">Gate</span></div>
+                  <div className="flex items-center gap-1"><span>🏥</span> <span className="truncate">Medical</span></div>
+                  <div className="flex items-center gap-1"><span>🍔</span> <span className="truncate">Food</span></div>
+                  <div className="flex items-center gap-1"><span>🏪</span> <span className="truncate">Shop</span></div>
+                  <div className="flex items-center gap-1"><span>🧠</span> <span className="truncate">Sensory</span></div>
+                  <div className="flex items-center gap-1"><span>ℹ️</span> <span className="truncate">Info</span></div>
+                </div>
               </div>
             </GlassCard>
 

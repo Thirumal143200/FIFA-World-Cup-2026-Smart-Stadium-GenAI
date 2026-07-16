@@ -1,6 +1,6 @@
-// src/app/fan/page.tsx
-// Fan Hub Dashboard — Main Fan landing point with interactive match day cards
 'use client';
+
+import { useEffect, useState } from 'react';
 
 import { DashboardLayout } from '@/components/layout/dashboard-layout';
 import { useStadiumStore } from '@/store/stadium-store';
@@ -28,6 +28,35 @@ export default function FanHub() {
 
   const stadium = stadiums.find((s) => s.id === selectedStadiumId) || stadiums[0];
 
+  const [aiTip, setAiTip] = useState<string | null>(null);
+  const [loadingTip, setLoadingTip] = useState(true);
+
+  useEffect(() => {
+    async function fetchAiTip() {
+      try {
+        setLoadingTip(true);
+        const res = await fetch('/api/ai/chat', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            message: `Provide a short, welcoming 2-sentence match day tip with emoji for a fan attending ${stadium.name} in ${stadium.city} today.`,
+            stadiumId: selectedStadiumId,
+            module: 'chat',
+          }),
+        });
+        const data = await res.json();
+        if (res.ok) {
+          setAiTip(data.message);
+        }
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setLoadingTip(false);
+      }
+    }
+    fetchAiTip();
+  }, [selectedStadiumId, stadium.name, stadium.city]);
+
   return (
     <DashboardLayout>
       <div className="space-y-6">
@@ -50,6 +79,21 @@ export default function FanHub() {
           </div>
         </div>
 
+        {/* AI Match Day Tip */}
+        {(loadingTip || aiTip) && (
+          <GlassCard variant="glass" className="border-emerald-500/20 bg-emerald-500/5 py-4 px-6 flex items-center gap-3">
+            <Sparkles className="h-6 w-6 text-emerald-500 shrink-0 animate-pulse" />
+            <div className="text-xs sm:text-sm">
+              <span className="font-bold text-emerald-600 dark:text-emerald-400 mr-1.5">AI Match Day Tip:</span>
+              {loadingTip ? (
+                <span className="animate-pulse text-muted-foreground">Formulating personalized stadium brief...</span>
+              ) : (
+                <span>{aiTip}</span>
+              )}
+            </div>
+          </GlassCard>
+        )}
+
         {/* Stadium Snapshot */}
         <div className="grid gap-6 md:grid-cols-3">
           {/* Card 1: Stadium Info */}
@@ -58,8 +102,17 @@ export default function FanHub() {
               <h2 className="font-semibold text-lg">Stadium Venue</h2>
               <MapPin className="text-primary h-5 w-5" />
             </div>
-            <div className="aspect-video w-full rounded-lg bg-muted relative overflow-hidden flex items-center justify-center">
-              <span className="text-xs text-muted-foreground font-mono">[ Stadium Image Placeholder ]</span>
+            <div className="aspect-video w-full rounded-lg gradient-fifa relative overflow-hidden flex flex-col justify-between p-4 shadow-inner">
+              <div className="flex justify-between items-start">
+                <FifaBadge variant="outline" className="text-white border-white/20 bg-white/5 font-semibold text-[9px] uppercase tracking-wider">
+                  Capacity: {stadium.capacity.toLocaleString()}
+                </FifaBadge>
+                <div className="text-white/20 font-bold text-3xl select-none">OS</div>
+              </div>
+              <div className="space-y-0.5">
+                <div className="text-xs font-bold text-white/95 uppercase tracking-wider">{stadium.name}</div>
+                <div className="text-[10px] text-white/70">{stadium.city}, {stadium.country}</div>
+              </div>
             </div>
             <div>
               <h3 className="font-bold text-base">{stadium.name}</h3>

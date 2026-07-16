@@ -6,7 +6,7 @@ import { askGemini } from '@/lib/gemini/client';
 import { SYSTEM_PROMPTS } from '@/lib/gemini/prompts';
 import { checkRateLimit } from '@/lib/security/rate-limit';
 import { getStadiumById } from '@/data/stadiums';
-import { z } from 'zod/v4';
+import { z } from 'zod';
 
 const AccessibilityRequestSchema = z.object({
   stadiumId: z.string().min(1),

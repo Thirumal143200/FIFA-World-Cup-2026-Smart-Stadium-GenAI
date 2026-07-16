@@ -1,7 +1,7 @@
 // src/types/user.ts
 // Type definitions for users, accessibility profiles, and preferences
 
-export type UserRole = 'fan' | 'staff' | 'volunteer' | 'organizer' | 'security';
+export type UserRole = 'fan' | 'volunteer' | 'organizer' | 'security' | 'admin';
 
 export interface User {
   id: string;

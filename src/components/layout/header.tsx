@@ -21,7 +21,7 @@ import type { UserRole } from '@/types';
 
 export function Header() {
   const router = useRouter();
-  const { role, setRole } = useUserStore();
+  const { role, setRole, displayName } = useUserStore();
   const { selectedStadiumId, setSelectedStadium } = useStadiumStore();
   const { toggleSidebar } = useUIStore();
   const { theme, setTheme } = useTheme();
@@ -97,9 +97,10 @@ export function Header() {
             className="h-9 rounded-lg border border-border bg-primary/10 text-primary px-3 py-1 text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-ring"
           >
             <option value="fan">Fan view</option>
-            <option value="staff">Staff view</option>
-            <option value="organizer">Organizer view</option>
+            <option value="volunteer">Volunteer view</option>
             <option value="security">Security view</option>
+            <option value="organizer">Organizer view</option>
+            <option value="admin">Admin view</option>
           </select>
         </div>
 
@@ -127,6 +128,19 @@ export function Header() {
           className="h-9 w-9 text-muted-foreground"
         >
           <Eye className="h-4.5 w-4.5" />
+        </ActionButton>
+
+        {/* Profile Link */}
+        <ActionButton
+          variant="ghost"
+          size="icon"
+          onClick={() => router.push('/profile')}
+          aria-label="View Profile"
+          className="h-9 w-9 text-muted-foreground border border-border bg-card hover:bg-muted"
+        >
+          <span className="text-xs font-bold text-primary capitalize">
+            {displayName ? displayName.charAt(0).toUpperCase() : 'U'}
+          </span>
         </ActionButton>
 
         {/* SOS Critical Quick Access */}
