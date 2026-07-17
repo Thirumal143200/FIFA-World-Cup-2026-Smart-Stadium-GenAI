@@ -34,6 +34,10 @@ export default function EmergencyHub() {
         }),
       });
 
+      const contentType = res.headers.get('content-type') ?? '';
+      if (!contentType.includes('application/json')) {
+        throw new Error(`Server returned ${res.status} (non-JSON response). The emergency API may be unreachable.`);
+      }
       const data = await res.json();
       if (res.ok) {
         setProtocol(data.protocol);

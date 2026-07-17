@@ -30,8 +30,9 @@ export default function FanSustainability() {
       try {
         setLoading(true);
         const res = await fetch(`/api/sustainability/${selectedStadiumId}`);
-        const data = await res.json();
-        if (res.ok) {
+        const contentType = res.headers.get('content-type') ?? '';
+        if (res.ok && contentType.includes('application/json')) {
+          const data = await res.json();
           setMetrics(data);
         }
       } catch (err) {
@@ -66,8 +67,9 @@ export default function FanSustainability() {
           distanceKm: distance,
         }),
       });
-      const data = await res.json();
-      if (res.ok) {
+      const contentType = res.headers.get('content-type') ?? '';
+      if (res.ok && contentType.includes('application/json')) {
+        const data = await res.json();
         setAiTip(data.recommendations);
       }
     } catch (err) {

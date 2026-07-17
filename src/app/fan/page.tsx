@@ -45,8 +45,9 @@ export default function FanHub() {
             module: 'chat',
           }),
         });
-        const data = await res.json();
-        if (res.ok) {
+        const contentType = res.headers.get('content-type') ?? '';
+        if (res.ok && contentType.includes('application/json')) {
+          const data = await res.json();
           setAiTip(data.message);
         }
       } catch (err) {

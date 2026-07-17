@@ -70,6 +70,10 @@ export default function FanChat() {
         }),
       });
 
+      const contentType = response.headers.get('content-type') ?? '';
+      if (!contentType.includes('application/json')) {
+        throw new Error(`Server returned ${response.status}. The chat service may be unavailable.`);
+      }
       const data = await response.json();
 
       if (response.ok) {

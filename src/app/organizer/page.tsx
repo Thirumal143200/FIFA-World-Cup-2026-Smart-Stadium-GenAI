@@ -35,6 +35,10 @@ export default function OrganizerHub() {
             matchStage: 'mid-match',
           }),
         });
+        const contentType = response.headers.get('content-type') ?? '';
+        if (!contentType.includes('application/json')) {
+          throw new Error(`Server returned ${response.status} (non-JSON). Please check your connection.`);
+        }
         const data = await response.json();
         if (response.ok) {
           setAiSummary(data.insights);

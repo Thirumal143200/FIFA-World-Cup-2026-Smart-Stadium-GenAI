@@ -57,12 +57,15 @@ export default function StaffIncidents() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ description: desc }),
       });
-      const data = await res.json();
-      if (res.ok && data.summary) {
-        setTitle(data.summary.title || '');
-        setCategory(data.summary.category || 'other');
-        setSeverity(data.summary.severity || 'medium');
-        setAiSummary(data.summary);
+      const contentType = res.headers.get('content-type') ?? '';
+      if (res.ok && contentType.includes('application/json')) {
+        const data = await res.json();
+        if (data.summary) {
+          setTitle(data.summary.title || '');
+          setCategory(data.summary.category || 'other');
+          setSeverity(data.summary.severity || 'medium');
+          setAiSummary(data.summary);
+        }
       }
     } catch (err) {
       console.error('Incident AI Summary error:', err);
@@ -79,8 +82,9 @@ export default function StaffIncidents() {
   const fetchIncidents = useCallback(async () => {
     try {
       const res = await fetch(`/api/incidents?stadiumId=${selectedStadiumId}`);
-      const data = await res.json();
-      if (res.ok) {
+      const contentType = res.headers.get('content-type') ?? '';
+      if (res.ok && contentType.includes('application/json')) {
+        const data = await res.json();
         setIncidents(data);
       }
     } catch (err) {

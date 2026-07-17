@@ -82,9 +82,13 @@ export function AICopilot() {
       });
 
       if (!response.ok) {
-        throw new Error('API request failed');
+        throw new Error(`API request failed with status ${response.status}`);
       }
 
+      const contentType = response.headers.get('content-type') ?? '';
+      if (!contentType.includes('application/json')) {
+        throw new Error('Received non-JSON response from server. The AI service may be unavailable.');
+      }
       const data = await response.json();
       setMessages((prev) => [...prev, { role: 'assistant', content: data.message }]);
     } catch (error) {

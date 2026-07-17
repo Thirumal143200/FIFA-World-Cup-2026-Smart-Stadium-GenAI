@@ -134,3 +134,26 @@ export function getLanguageDirection(lang: string): 'ltr' | 'rtl' {
   const rtlLanguages = ['ar', 'he', 'ur'];
   return rtlLanguages.includes(lang) ? 'rtl' : 'ltr';
 }
+
+/**
+ * Safely fetches a URL and parses JSON only if response is OK and content-type includes application/json.
+ */
+export async function safeFetchJson<T = any>(
+  input: RequestInfo | URL,
+  init?: RequestInit
+): Promise<T> {
+  const response = await fetch(input, init);
+  
+  if (!response.ok) {
+    throw new Error(`Request failed with status ${response.status}`);
+  }
+  
+  const contentType = response.headers.get('content-type');
+  if (!contentType || !contentType.includes('application/json')) {
+    const text = await response.text();
+    const snippet = text.slice(0, 100).replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    throw new Error(`Expected JSON response, but received HTML/Text response starting with: "${snippet}..."`);
+  }
+  
+  return response.json() as Promise<T>;
+}

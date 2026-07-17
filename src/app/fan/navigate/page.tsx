@@ -60,6 +60,10 @@ export default function FanNavigate() {
         }),
       });
 
+      const contentType = response.headers.get('content-type') ?? '';
+      if (!contentType.includes('application/json')) {
+        throw new Error(`Server returned ${response.status} (non-JSON). Navigation service may be unavailable.`);
+      }
       const data = await response.json();
       if (response.ok) {
         setRouteExplanation(data.route);

@@ -48,6 +48,10 @@ export default function VolunteerHub() {
         }),
       });
 
+      const contentType = res.headers.get('content-type') ?? '';
+      if (!contentType.includes('application/json')) {
+        throw new Error(`Server returned ${res.status} (non-JSON). Stand by for dispatcher radio briefing.`);
+      }
       const data = await res.json();
       if (res.ok) {
         setVolunteerBrief(data.insights);

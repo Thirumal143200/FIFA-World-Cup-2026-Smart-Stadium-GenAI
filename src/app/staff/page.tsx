@@ -26,8 +26,9 @@ export default function StaffHub() {
       try {
         setLoading(true);
         const res = await fetch(`/api/incidents?stadiumId=${selectedStadiumId}`);
-        const data = await res.json();
-        if (res.ok) {
+        const contentType = res.headers.get('content-type') ?? '';
+        if (res.ok && contentType.includes('application/json')) {
+          const data = await res.json();
           setIncidents(data);
         }
       } catch (err) {

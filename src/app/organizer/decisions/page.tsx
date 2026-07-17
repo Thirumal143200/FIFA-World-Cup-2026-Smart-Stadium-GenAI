@@ -37,6 +37,10 @@ export default function OrganizerDecisions() {
         }),
       });
 
+      const contentType = res.headers.get('content-type') ?? '';
+      if (!contentType.includes('application/json')) {
+        throw new Error(`Server returned ${res.status} (non-JSON). Failed to run optimization models.`);
+      }
       const data = await res.json();
       if (res.ok) {
         setInsights(data.insights);

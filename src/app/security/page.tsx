@@ -27,9 +27,10 @@ export default function SecurityHub() {
       try {
         setLoading(true);
         const res = await fetch(`/api/incidents?stadiumId=${selectedStadiumId}`);
-        const data = await res.json();
         let securityIncidentsCount = 0;
-        if (res.ok) {
+        const contentType1 = res.headers.get('content-type') ?? '';
+        if (res.ok && contentType1.includes('application/json')) {
+          const data = await res.json();
           setIncidents(data);
           securityIncidentsCount = data.filter((inc: Incident) => inc.category === 'security' && inc.status !== 'resolved').length;
         }
@@ -47,8 +48,9 @@ export default function SecurityHub() {
             matchStage: 'mid-game',
           }),
         });
-        const operationalData = await operationalRes.json();
-        if (operationalRes.ok) {
+        const contentType2 = operationalRes.headers.get('content-type') ?? '';
+        if (operationalRes.ok && contentType2.includes('application/json')) {
+          const operationalData = await operationalRes.json();
           setThreatBrief(operationalData.insights);
         }
       } catch (err) {
@@ -78,8 +80,9 @@ export default function SecurityHub() {
           matchStage: 'mid-game',
         }),
       });
-      const data = await res.json();
-      if (res.ok) {
+      const contentType = res.headers.get('content-type') ?? '';
+      if (res.ok && contentType.includes('application/json')) {
+        const data = await res.json();
         setThreatBrief(data.insights);
       }
     } catch (err) {

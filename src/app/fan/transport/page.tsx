@@ -30,8 +30,9 @@ export default function FanTransport() {
       try {
         setLoading(true);
         const res = await fetch(`/api/transport/${selectedStadiumId}`);
-        const data = await res.json();
-        if (res.ok) {
+        const contentType = res.headers.get('content-type') ?? '';
+        if (res.ok && contentType.includes('application/json')) {
+          const data = await res.json();
           setStatuses(data.status);
         }
       } catch (err) {
@@ -55,8 +56,9 @@ export default function FanTransport() {
             module: 'transport',
           }),
         });
-        const data = await res.json();
-        if (res.ok) {
+        const contentType = res.headers.get('content-type') ?? '';
+        if (res.ok && contentType.includes('application/json')) {
+          const data = await res.json();
           setAiAdvice(data.message);
         }
       } catch (err) {

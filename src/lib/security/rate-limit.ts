@@ -62,7 +62,11 @@ export async function checkRateLimit(
   tier: 'ai' | 'api' | 'auth' = 'api'
 ): Promise<RateLimitResult> {
   if (isUpstashConfigured()) {
-    return checkUpstashRateLimit(identifier, tier);
+    try {
+      return await checkUpstashRateLimit(identifier, tier);
+    } catch (error) {
+      console.error('[Rate Limit] Upstash error, falling back to local memory:', error);
+    }
   }
   return checkMemoryRateLimit(identifier, tier);
 }

@@ -53,6 +53,10 @@ export default function AdminHub() {
         }),
       });
 
+      const contentType = res.headers.get('content-type') ?? '';
+      if (!contentType.includes('application/json')) {
+        throw new Error(`Server returned ${res.status} (non-JSON). Stand by for local system logs.`);
+      }
       const data = await res.json();
       if (res.ok) {
         setAdminReport(data.insights);
