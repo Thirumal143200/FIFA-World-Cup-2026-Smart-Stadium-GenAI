@@ -88,7 +88,7 @@ export const RATE_LIMITS = {
 } as const;
 
 export const AI_CONFIG = {
-  model: 'gemini-2.0-flash',
+  model: 'gemini-3.1-flash-lite',
   maxOutputTokens: 2048,
   temperature: 0.7,
   topP: 0.9,
