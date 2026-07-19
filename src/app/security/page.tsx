@@ -12,29 +12,24 @@ import { Shield, AlertTriangle, Users, Sparkles } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import type { Incident } from '@/types';
 
+import { useIncidents } from '@/hooks/useIncidents';
+
 export default function SecurityHub() {
   const router = useRouter();
   const { selectedStadiumId } = useStadiumStore();
 
-  const [incidents, setIncidents] = useState<Incident[]>([]);
-  const [loading, setLoading] = useState(true);
+  const { incidents, loading: loadingIncidents } = useIncidents(selectedStadiumId);
 
   const [loadingThreat, setLoadingThreat] = useState(false);
   const [threatBrief, setThreatBrief] = useState<string | null>(null);
 
+  const activeSecurityIncidents = incidents.filter((inc) => inc.category === 'security' && inc.status !== 'resolved');
+
   useEffect(() => {
+    if (loadingIncidents) return;
+
     async function fetchIncidentsAndAssess() {
       try {
-        setLoading(true);
-        const res = await fetch(`/api/incidents?stadiumId=${selectedStadiumId}`);
-        let securityIncidentsCount = 0;
-        const contentType1 = res.headers.get('content-type') ?? '';
-        if (res.ok && contentType1.includes('application/json')) {
-          const data = await res.json();
-          setIncidents(data);
-          securityIncidentsCount = data.filter((inc: Incident) => inc.category === 'security' && inc.status !== 'resolved').length;
-        }
-
         // Auto assess threat level using operational API
         setLoadingThreat(true);
         setThreatBrief(null);
@@ -44,7 +39,7 @@ export default function SecurityHub() {
           body: JSON.stringify({
             stadiumId: selectedStadiumId,
             currentStaffCount: 320,
-            activeIncidentsCount: securityIncidentsCount,
+            activeIncidentsCount: activeSecurityIncidents.length,
             matchStage: 'mid-game',
           }),
         });
@@ -57,14 +52,11 @@ export default function SecurityHub() {
         console.error(err);
         setThreatBrief('Failed to load real-time AI security threat assessments.');
       } finally {
-        setLoading(false);
         setLoadingThreat(false);
       }
     }
     fetchIncidentsAndAssess();
-  }, [selectedStadiumId]);
-
-  const activeSecurityIncidents = incidents.filter((inc) => inc.category === 'security' && inc.status !== 'resolved');
+  }, [selectedStadiumId, activeSecurityIncidents.length, loadingIncidents]);
 
   const getThreatAssessment = async () => {
     setLoadingThreat(true);
@@ -163,7 +155,7 @@ export default function SecurityHub() {
             </div>
 
             <div className="space-y-3">
-              {loading ? (
+              {loadingIncidents ? (
                 Array.from({ length: 2 }).map((_, i) => (
                   <div key={i} className="h-24 bg-muted animate-pulse rounded-xl" />
                 ))

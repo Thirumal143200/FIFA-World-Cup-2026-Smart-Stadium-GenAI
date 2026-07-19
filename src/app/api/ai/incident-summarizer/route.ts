@@ -3,7 +3,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { askGemini } from '@/lib/gemini/client';
-import { checkRateLimit } from '@/lib/security/rate-limit';
+import { handleApiRateLimit } from '@/lib/security/rate-limit';
 import { sanitizeInput } from '@/lib/security/sanitize';
 import { z } from 'zod';
 
@@ -13,11 +13,8 @@ const SummarizeSchema = z.object({
 
 export async function POST(request: NextRequest) {
   try {
-    const ip = request.headers.get('x-forwarded-for') ?? 'anonymous';
-    const rateLimit = await checkRateLimit(ip, 'ai');
-    if (!rateLimit.allowed) {
-      return NextResponse.json({ error: 'Rate limit exceeded.' }, { status: 429 });
-    }
+    const rateLimitResponse = await handleApiRateLimit(request, 'ai');
+    if (rateLimitResponse) return rateLimitResponse;
 
     const body = await request.json();
     const parsed = SummarizeSchema.safeParse(body);

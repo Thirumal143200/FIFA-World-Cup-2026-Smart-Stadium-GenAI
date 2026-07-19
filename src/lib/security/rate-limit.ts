@@ -4,6 +4,7 @@
 import { Ratelimit } from '@upstash/ratelimit';
 import { Redis } from '@upstash/redis';
 import { RATE_LIMITS } from '@/lib/constants';
+import { NextResponse, type NextRequest } from 'next/server';
 
 type RateLimitWindow = `${number}${'s' | 'm' | 'h' | 'd'}`;
 
@@ -69,6 +70,31 @@ export async function checkRateLimit(
     }
   }
   return checkMemoryRateLimit(identifier, tier);
+}
+
+/**
+ * Standard Next.js route helper to check rate limit and return 429 response if blocked.
+ */
+export async function handleApiRateLimit(
+  request: NextRequest,
+  tier: 'ai' | 'api' | 'auth' = 'api'
+): Promise<NextResponse | null> {
+  const ip = request.headers.get('x-forwarded-for') ?? request.headers.get('x-real-ip') ?? 'anonymous';
+  const rateLimit = await checkRateLimit(ip, tier);
+  if (!rateLimit.allowed) {
+    return NextResponse.json(
+      { error: 'Rate limit exceeded. Please wait before retrying.' },
+      {
+        status: 429,
+        headers: {
+          'X-RateLimit-Remaining': String(rateLimit.remaining),
+          'X-RateLimit-Reset': String(rateLimit.reset),
+          'Retry-After': '60',
+        },
+      }
+    );
+  }
+  return null;
 }
 
 async function checkUpstashRateLimit(

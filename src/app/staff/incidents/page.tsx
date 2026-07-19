@@ -2,7 +2,7 @@
 // Incident Log Management — allows reporting, claiming, and notes logging
 'use client';
 
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState } from 'react';
 import { DashboardLayout } from '@/components/layout/dashboard-layout';
 import { useStadiumStore } from '@/store/stadium-store';
 import { useUserStore } from '@/store/user-store';
@@ -12,20 +12,14 @@ import { FifaBadge } from '@/components/ui/FifaBadge';
 import { ActionButton } from '@/components/ui/ActionButton';
 import { AlertTriangle, Plus, ShieldCheck } from 'lucide-react';
 import type { Incident } from '@/types';
+import { useIncidents } from '@/hooks/useIncidents';
 
 export default function StaffIncidents() {
   const { selectedStadiumId } = useStadiumStore();
   const { displayName, role } = useUserStore();
   const stadium = stadiums.find((s) => s.id === selectedStadiumId) || stadiums[0];
 
-  const [incidents, setIncidents] = useState<Incident[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [prevStadiumId, setPrevStadiumId] = useState(selectedStadiumId);
-
-  if (selectedStadiumId !== prevStadiumId) {
-    setPrevStadiumId(selectedStadiumId);
-    setLoading(true);
-  }
+  const { incidents, loading, reportIncident, updateIncidentStatus } = useIncidents(selectedStadiumId);
 
   // Report form state
   const [showForm, setShowForm] = useState(false);
@@ -79,26 +73,6 @@ export default function StaffIncidents() {
   const [notes, setNotes] = useState('');
   const [updating, setUpdating] = useState(false);
 
-  const fetchIncidents = useCallback(async () => {
-    try {
-      const res = await fetch(`/api/incidents?stadiumId=${selectedStadiumId}`);
-      const contentType = res.headers.get('content-type') ?? '';
-      if (res.ok && contentType.includes('application/json')) {
-        const data = await res.json();
-        setIncidents(data);
-      }
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setLoading(false);
-    }
-  }, [selectedStadiumId]);
-
-  useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    fetchIncidents();
-  }, [fetchIncidents]);
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!title.trim() || !desc.trim() || reporting) return;
@@ -107,36 +81,29 @@ export default function StaffIncidents() {
     const selectedZoneName = stadium.zones.find((z) => z.id === zoneId)?.name || 'Stadium Zone';
 
     try {
-      const res = await fetch('/api/incidents', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          stadiumId: selectedStadiumId,
-          category,
-          severity,
-          title,
-          description: desc,
-          location: {
-            zoneId,
-            zoneName: selectedZoneName,
-            landmark,
-          },
-          reportedBy: {
-            name: displayName,
-            role,
-          },
-        }),
+      const success = await reportIncident({
+        category,
+        severity,
+        title,
+        description: desc,
+        location: {
+          zoneId,
+          zoneName: selectedZoneName,
+          landmark,
+        },
+        reportedBy: {
+          name: displayName,
+          role,
+        },
       });
 
-      if (res.ok) {
+      if (success) {
         setTitle('');
         setDesc('');
         setLandmark('');
         setShowForm(false);
-        fetchIncidents();
+        setAiSummary(null);
       }
-    } catch (err) {
-      console.error(err);
     } finally {
       setReporting(false);
     }
@@ -145,27 +112,17 @@ export default function StaffIncidents() {
   const handleUpdateStatus = async (id: string, nextStatus: 'acknowledged' | 'in-progress' | 'resolved', appendNote?: string) => {
     setUpdating(true);
     try {
-      const res = await fetch(`/api/incidents/${id}`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          status: nextStatus,
-          assignedTo: {
-            userId: 'current-user-id',
-            name: displayName,
-            role,
-          },
-          notes: appendNote || undefined,
-        }),
+      const success = await updateIncidentStatus(id, nextStatus, {
+        userId: 'current-user-id',
+        name: displayName,
+        role,
+        notes: appendNote,
       });
 
-      if (res.ok) {
+      if (success) {
         setNotes('');
         setActiveNotesId(null);
-        fetchIncidents();
       }
-    } catch (err) {
-      console.error(err);
     } finally {
       setUpdating(false);
     }

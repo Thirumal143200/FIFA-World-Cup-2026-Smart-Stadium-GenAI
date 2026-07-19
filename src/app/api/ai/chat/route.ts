@@ -5,28 +5,15 @@ import { NextRequest, NextResponse } from 'next/server';
 import { askGemini } from '@/lib/gemini/client';
 import { SYSTEM_PROMPTS } from '@/lib/gemini/prompts';
 import { AIChatSchema } from '@/lib/validators/schemas';
-import { checkRateLimit } from '@/lib/security/rate-limit';
+import { handleApiRateLimit } from '@/lib/security/rate-limit';
 import { sanitizeInput } from '@/lib/security/sanitize';
 import { getStadiumById } from '@/data/stadiums';
 
 export async function POST(request: NextRequest) {
   try {
     // Rate limiting
-    const ip = request.headers.get('x-forwarded-for') ?? request.headers.get('x-real-ip') ?? 'anonymous';
-    const rateLimit = await checkRateLimit(ip, 'ai');
-    if (!rateLimit.allowed) {
-      return NextResponse.json(
-        { error: 'Rate limit exceeded. Please wait before sending more messages.' },
-        {
-          status: 429,
-          headers: {
-            'X-RateLimit-Remaining': String(rateLimit.remaining),
-            'X-RateLimit-Reset': String(rateLimit.reset),
-            'Retry-After': '60',
-          },
-        }
-      );
-    }
+    const rateLimitResponse = await handleApiRateLimit(request, 'ai');
+    if (rateLimitResponse) return rateLimitResponse;
 
     // Parse and validate body
     const body = await request.json();
