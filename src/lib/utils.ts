@@ -138,7 +138,7 @@ export function getLanguageDirection(lang: string): 'ltr' | 'rtl' {
 /**
  * Safely fetches a URL and parses JSON only if response is OK and content-type includes application/json.
  */
-export async function safeFetchJson<T = any>(
+export async function safeFetchJson<T = unknown>(
   input: RequestInfo | URL,
   init?: RequestInit
 ): Promise<T> {
